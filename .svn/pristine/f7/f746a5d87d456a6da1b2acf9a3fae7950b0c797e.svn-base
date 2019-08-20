@@ -1,0 +1,29 @@
+
+  <view>
+    <view catchtouchmove="true">
+      <view class="head">
+            <view class="search">
+              <view class="flex-row input-group">
+                <label><image class="login-icon" src="../assets/images/icon_ss.png"/></label>
+                <input type="number" placeholder="输入会员手机号代交订金" placeholder-class="placeholder" confirm-type="search" bindinput="bindPassword" maxlength="11"/>
+              </view>
+            </view>
+          </view>
+          <view class="title">我的用户（共{{num}}户）</view>
+    </view>
+
+    <scroll-view style="{{'height:'+(height-130)+'px'}}" bindscrolltolower="loadMore" scroll-y>
+      <block  wx:for="{{list}}" wx:key="wx:key" index="index" item="item">
+        <view class="con-item">
+          <view class="con-left">
+            <image mode="aspectFit" src="{{item.icon}}"/>
+            <text>{{item.user_name}} {{item.mobile}}</text>
+          </view>
+          <view class="con-right">
+            <text class="label">{{item.status>0?'已认证':''}}</text>
+            <text class="time">{{item.update_at}}</text>
+          </view>
+        </view>
+      </block>
+    </scroll-view>
+  </view>

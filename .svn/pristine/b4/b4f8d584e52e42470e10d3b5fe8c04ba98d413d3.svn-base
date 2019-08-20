@@ -1,0 +1,13 @@
+{
+  "description": "多让运营端",
+  "setting": {
+    "urlCheck": true,
+    "es6": false,
+    "postcss": false,
+    "minified": false
+  },
+  "compileType": "miniprogram",
+  "appid": "wx51705f17a28c48e3",
+  "projectname": "operate",
+  "miniprogramRoot": "./dist"
+}

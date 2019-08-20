@@ -1,0 +1,168 @@
+<style lang="less">
+  page {
+    background: #f7f7f7;
+  }
+
+  .header {
+    background-color: #fff;
+    padding: 40rpx 0rpx 40rpx 40rpx;
+    margin-bottom: 20rpx;
+    >.project {
+      color: #333;
+      font-weight: 500;
+      font-size: 18px;
+      line-height: 50rpx;
+    }
+    > .total {
+      color: #333;
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 34rpx;
+    }
+  }
+
+  .list {
+    padding: 32rpx 28rpx;
+    padding-bottom: 0;
+    background-color: #fff;
+    display: flex;
+    align-content: center;
+    >.iconImage {
+      flex: 1;
+      padding-bottom: 30rpx;
+      border-bottom: 1px solid #eee;
+      >.icon {
+        width: 70rpx;
+        height: 70rpx;
+        border-radius: 50%;
+      }
+    }
+    .right {
+      flex: 9;
+      padding-bottom: 30rpx;
+      border-bottom: 1px solid #eee;
+      >.rightItem {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        >.name {
+          font-size: 14px;
+          color: #666;
+          font-weight: 400;
+          padding-left: 30rpx;
+        }
+        >.orange {
+          color: #ff5d22;
+          font-size: 13px;
+          font-weight: 400;
+        }
+        >.bottom {
+          color: #999;
+          font-size: 12px;
+          padding-left: 30rpx;
+        }
+      }
+    }
+  }
+</style>
+
+<template>
+  <view class="main">
+    <view class="header">
+      <text class="project">{{list[0].project_name || '该集采暂无订金单记录'}}</text>
+      <text class="total" wx:if="{{list.length}}">（共 {{records}} 户下单）</text>
+    </view>
+
+    <view class="list" wx:for="{{list}}" wx:key="index" index="index" item="item">
+      <view class="iconImage">
+        <image src="{{item.icon}}" class="icon"/>
+      </view>
+      <view class="right">
+        <view class="rightItem">
+          <text class="name">{{item.user_name}} {{item.mobile}}</text>
+          <text class="orange">{{item.status == '0' ? '待支付' : item.status == '-1' ? '取消' : item.status == '-2' ? '已退单' : item.status == '1' ? '待转单' : '已转单'}}</text>
+        </view>
+        <view class="rightItem">
+          <text class="bottom">{{item.village_name}} {{item.door_number}}</text>
+          <text class="bottom">{{item.update_at}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- <view wepy:else class="list">
+      <view class="iconImage">
+        暂无签到
+      </view>
+    </view> -->
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import toastMixin from '../mixins/toast'
+  import api from '../mixins/api'
+  import util from '../mixins/util'
+
+  export default class SubList extends wepy.page {
+    config = {
+      navigationBarTitleText: '订金单记录',
+      navigationBarBackgroundColor: '#FF5D22',
+      navigationBarTextStyle: 'white'
+    }
+
+    mixins = [api, toastMixin, util]
+
+    onLoad() {
+      let id = wepy.getStorageSync('activity_project_id') || '-1'
+      this.getSubList(id).then(res => {
+        if (res.data.data) {
+          this.list = res.data.data
+          this.records = res.data.records
+          this.page = res.data.page
+          this.total = res.data.total
+          this.$apply()
+        } else {
+          this.selfToast('暂无数据,请重试', 'none')
+          this.hideToast()
+          this.$apply()
+        }
+      })
+    }
+
+    data = {
+      list: [],
+      page: 1,
+      records: '',
+      total: ''
+    }
+
+    methods = {
+
+    }
+
+    // 上拉加载更多
+    onReachBottom() {
+      console.log(22)
+      let that = this
+      if (that.page < that.total) {
+        that.showToast()
+        let page = that.page + 1
+        console.log(page)
+        that.getSubList(wepy.getStorageSync('activity_project_id'), page).then(res => {
+          console.log(res)
+          // 如果有数据
+          // if (res.data.data.length) {
+          for (let i = 0; i < res.data.data.length; i++) {
+            that.list.push(res.data.data[i])
+            that.page = res.data.page
+            that.$apply()
+          }
+          // }
+        })
+      } else {
+        that.selfToast('暂无更多数据', 'none')
+      }
+    }
+  }
+</script>

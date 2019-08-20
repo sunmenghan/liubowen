@@ -1,0 +1,471 @@
+<style lang="less">
+  page {
+    background-color: #f7f7f7;
+  }
+.head{
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20rpx;
+}
+  .search {
+    padding: 44rpx 28rpx;
+    background-color: #fff;
+    display: flex;
+    >.flex-row {
+      display:flex;
+      flex-wrap:wrap;
+      align-items:center;
+      border-radius: 46rpx;
+      border: 1px solid #e9e9e9;
+      padding: 20rpx 20rpx 10rpx 20rpx;
+      width: 76%;
+      font-size: 28rpx;
+      background-color: #E9E9E9;
+      color: #666666;
+    }
+    .scan-btn{
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 20%;
+      font-size: 20rpx;
+      color: #333333;
+      .scan-img{
+        width: 50rpx;
+        height: 44rpx;
+        padding-bottom: 8rpx;
+      }
+    }
+    .login-icon {
+      width:36rpx;
+      height:42rpx;
+      margin-right:20rpx;
+      margin-left: 20rpx;
+    }
+  }
+
+  .placeholder {
+    font-size:14px;
+    color: #666;
+  }
+
+  .title {
+    line-height: 108rpx;
+    font-size: 14px;
+    color: #666;
+    padding-left: 28rpx;
+    background-color: #fff;
+    border-bottom: 1px solid #eee;
+  }
+
+  .list {
+    padding: 32rpx 28rpx;
+    padding-bottom: 0;
+    background-color: #fff;
+    display: flex;
+    align-content: center;
+    border-bottom: 1px solid #eee;
+    >.iconImage {
+      flex: 1;
+      padding-bottom: 30rpx;
+      >.icon {
+        width: 70rpx;
+        height: 70rpx;
+        border-radius: 50%;
+      }
+    }
+    .right {
+      flex: 7;
+      padding-bottom: 30rpx;
+      >.rightItem {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        >.name {
+          font-size: 14px;
+          color: #666;
+          font-weight: 400;
+          padding-left: 30rpx;
+        }
+        >.orange {
+          color: #ff5d22;
+          font-size: 13px;
+          font-weight: 400;
+        }
+        >.bottom {
+          color: #999;
+          font-size: 12px;
+          padding-left: 30rpx;
+        }
+      }
+    }
+
+    .buttonSlef {
+      flex: 2;
+      border: 1px solid #e94816;
+      background-color: rgba(233,72,22,0.1);
+      color: #e94816;
+      width: 120rpx;
+      height: 50rpx;
+      border-radius: 8rpx;
+      font-size: 13px;
+      text-align: center;
+      line-height: 50rpx;
+    }
+    .time{
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: flex-end;
+      .t-status{
+        color: #E94816;
+        font-size: 13px;
+      }
+      .t-time{
+        color: #999999;
+        font-size: 12px;
+      }
+    }
+
+    .over {
+      font-size:13px;
+      font-weight:400;
+      color:#4A4A4A;
+      line-height: 50rpx;
+    }
+  }
+
+  .searchList {
+    width: 100%;
+    padding: 26rpx 28rpx;
+    align-items: center;
+    z-index: 999;
+    box-sizing:border-box;
+    > .right {
+      padding-bottom: 0rpx;
+    }
+    >.iconImage {
+      padding-bottom: 0rpx;
+    }
+  }
+  .f_btn{
+    flex: 1;
+    .btn{
+      padding: 10rpx 0;
+      text-align: center;
+      border: 1px solid #E94816;
+      background-color: rgba(233,72,22,0.2);
+      margin-left: 16rpx;
+      -webkit-border-radius: 8rpx;
+      -moz-border-radius: 8rpx;
+      border-radius: 8rpx;
+      font-size: 26rpx;
+      color: #E94816;
+      width: 120rpx;
+    }
+  }
+.fixedIndex{
+  position:fixed;
+  top:80%;
+  left:20rpx;
+}
+.fixedIndex image{
+  width:80rpx;
+  height:80rpx;
+}
+</style>
+
+<template>
+  <view>
+    <view class="head">
+      <view class="search">
+        <view class="flex-row input-group">
+          <label><image class="login-icon" src="../assets/images/icon_ss.png"/></label>
+          <input type="number" placeholder="输入会员手机号代交订金" placeholder-class="placeholder" confirm-type="search" bindinput="bindPassword" maxlength="11"/>
+        </view>
+          <view class="scan-btn" @tap="scanCode">
+            <image class="scan-img" src="../assets/images/icon_sys.png"></image>
+            <text class="scan-txt">扫码收</text>
+          </view>
+      </view>
+      <!-- 搜索展示框 -->
+      <view class="searchList list" wx:if="{{flag}}">
+        <view class="iconImage">
+          <image src="{{searchlist.icon}}" class="icon"/>
+        </view>
+        <view class="right">
+          <view class="rightItem">
+            <text class="name">{{searchlist.user_name}} \t{{searchlist.mobile}}</text>
+          </view>
+          <view class="rightItem">
+            <text class="bottom">{{searchlist.village_name}} {{searchlist.door_number}}</text>
+          </view>
+        </view>
+        <view class="f_btn">
+          <view class="over" wx:if="{{searchlist.signCount > 0}}">已提交订金单</view>
+          <view class="btn" data-id="{{searchlist.id}}" wx:else @tap="SearchSubscription">交订金</view>
+        </view>
+      </view>
+    </view>
+
+    <view class="title">{{title}}</view>
+    <scroll-view
+      style="{{'height:'+(height-130)+'px'}}"
+      bindscrolltolower="loadMore"
+      scroll-y>
+      <view class="list" wx:for="{{list}}" wx:key="index" index="index" item="item">
+        <view class="iconImage">
+          <image src="{{item.icon}}" class="icon"/>
+        </view>
+        <view class="right">
+          <view class="rightItem">
+            <text class="name">{{item.link_name}}</text>
+          </view>
+          <view class="rightItem">
+            <text class="bottom">{{item.village_name}} {{item.door_number}}</text>
+          </view>
+        </view>
+        <!--<view class="over" wx:if="{{item.signCount > 0}}">已提交订金单</view>-->
+        <!--<view class="buttonSlef" wx:else @tap="giveSubscription('{{item.user_id}}')">交订金</view>-->
+        <view class="time">
+          <text class="t-status">{{item.status}}</text>
+          <text class="t-time">{{item.create_at}}</text>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+
+<!--返回首页-->
+  <view wx:if='{{fixedIndex}}' class='fixedIndex' @tap='keepOutIndex'>
+      <image src='../assets/images/returnIndex.png'/>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import toastMixin from '../mixins/toast'
+  import api from '../mixins/api'
+  import util from '../mixins/util'
+
+  export default class Subscription extends wepy.page {
+    config = {
+        navigationBarTitleText: '收订金',
+        navigationBarBackgroundColor: '#FF5D22',
+        navigationBarTextStyle: 'white'
+     }
+
+    mixins = [toastMixin, api, util]
+
+    data = {
+      searchlist: {},
+      list: [],
+      title: '负责项目',
+      flag: false,
+      page: 1,
+      height: 0,
+      fixedIndex:false,
+    }
+
+    methods = {
+    keepOutIndex(){
+       this.$redirect({
+        url: './index'
+      })
+    },
+      // 实时查询
+      bindPassword (e) {
+        console.log(e.detail.value)
+        let value = e.detail.value
+        let id = wepy.getStorageSync('activity_project_id') || '-1'
+        if (value && value.length === 11) {
+          this.getMember(value, id).then(res => {
+            if (res.data.resultCode === 1000) {
+              console.log(res.data.resultCode)
+              this.searchlist = res.data.data
+              this.flag = true
+              this.$apply()
+            } else {
+              this.selfToast(String(res.data.error), 'none')
+              this.flag = false
+              this.$apply()
+            }
+          })
+        } else {
+          this.flag = false
+          this.$apply()
+        }
+      },
+
+      giveSubscription (userId) {
+        let that = this
+        let projectId = wepy.getStorageSync('activity_project_id') || '-1'
+        that.getSub(userId, projectId).then(res => {
+          if (res.data.resultCode === 1001) {
+            that.selfToast(res.data.error, 'none')
+            return false
+          } else {
+            that.$navigate('./EditSub', {'userId': userId, 'projectId': projectId})
+          }
+        })
+      },
+
+      loadMore() {
+        if (this.flag) {
+          wx.showToast({
+            title: '没有更多了',
+            duration: 1000
+          })
+          return false
+        }
+        let page = this.page
+        page += 1
+        let id = wepy.getStorageSync('activity_project_id') || '-1'
+        this.getSubList(id, page).then(res => {
+          console.log('this', this)
+          if (res.data.data.length > 0) {
+            let tempData = res.data.data
+            for (let o of tempData) {
+              o.status = this.changState(o.status)
+            }
+            this.list = tempData
+            this.page = page
+          } else {
+            this.flag = true
+            wx.showToast({
+              title: '没有更多了'
+            })
+          }
+          this.$apply()
+        })
+      },
+
+      // 扫码
+      scanCode() {
+        let that = this
+        wx.scanCode({
+          success(res) {
+            console.log(res)
+            let result = res.result
+
+            that.scanSubscrip({usercode: result}).then(res => {
+              console.log('scanres', res)
+              let id = res.data.data.id
+              that.SearchSubscription(id)
+            })
+          }
+        })
+      }
+    }
+
+    SearchSubscription (e) {
+      let id = e
+      let that = this
+      if (typeof e === 'object') {
+        id = e.currentTarget.dataset.id
+      }
+      let projectId = wepy.getStorageSync('activity_project_id') || '-1'
+      that.getSub(id, projectId).then(res => {
+        if (res.data.resultCode === 1001) {
+          that.selfToast(res.data.error, 'none')
+          return false
+        } else {
+          this.$navigate('./EditSub', {'userId': id, 'projectId': projectId})
+        }
+      })
+    }
+
+    changState(state, type) {
+      let txt = ''
+      switch (state) {
+        case -3:
+          txt = '退款中'
+          break
+        case -2:
+          txt = '已退单'
+          break
+        case -1:
+          txt = '取消'
+          break
+        case 0:
+          txt = '待支付'
+          if (type) {
+            txt = '申请中'
+          }
+          break
+        case 1:
+          txt = '待转单'
+          if (type) {
+            txt = '已退单'
+          }
+          break
+        case 2:
+          txt = '已转单'
+          if (type) {
+            txt = '已取消'
+          }
+          break
+        default: {
+          txt = '部分退款中'
+        }
+      }
+      return txt
+    }
+
+    onLoad(options) {
+        console.log(options,"paypaypay")
+         if(options.pay=="pay"){
+            this.fixedIndex = true
+         }
+
+      // 查询签到用户
+      let id = wepy.getStorageSync('activity_project_id') || '-1'
+      let h = wx.getSystemInfoSync().windowHeight
+      let params = '';
+        if(options.data){
+           params = JSON.parse(options.data);
+        }
+      this.title = options.projectName
+
+      console.log('params', params)
+      // this.signList(id).then(res => {
+      //   console.log(res)
+      //   this.list = res.data.data
+      //   console.log(res.data.data.length)
+      //   if (res.data.data.length === 0) {
+      //     this.title = '该项目暂无人员签到'
+      //   } else {
+      //     this.title = '该项目今日已签到用户'
+      //   }
+      //   this.height = h
+      //   this.$apply()
+      // })
+      this.getSubList(id).then(res => {
+        console.log('list', res.data.data)
+        if (res.data.data) {
+          let tempData = res.data.data
+          for (let o of tempData) {
+            o.status = this.changState(o.status)
+          }
+          this.list = tempData
+          this.height = h
+          this.$apply()
+        } else {
+          this.selfToast('暂无数据,请重试', 'none', 2000)
+          this.hideToast()
+          this.height = h
+          this.$apply()
+        }
+      })
+    }
+
+    onShow(){
+      this.flag = false
+    }
+
+
+
+
+  }
+</script>

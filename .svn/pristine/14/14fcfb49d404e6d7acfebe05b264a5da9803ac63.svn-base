@@ -1,0 +1,122 @@
+
+  <view class="main">
+    <view class="header {{showMask?'modal':''}}">
+
+
+          <picker  wx:if="{{type}}" mode="selector" bindchange="bindAgentPickerChange" range-key="{{'name'}}" value="{{pickerActive[hx_index].id}}" range="{{pickerActive}}" data-id="{{pickerActive[hx_index].id}}">
+                     <text class="project">{{pickerActive[hx_index].name}}</text>
+                </picker>
+
+        <view  wx:if="{{!type}}" class="project">
+            <block wx:for="{{pickerActive}}" wx:key="key">
+               <text wx:if="{{item.id==option.base_id}}"> {{item.name}}</text>
+            </block>
+        </view>
+
+
+
+
+      <view class="filter" bindtap="showFilter">
+        <image src="../assets/images/icon_sx@2x.png"/>
+        <text>筛选</text>
+      </view>
+    </view>
+
+    <scroll-view scroll-y style="{{'height:'+height+'px'}}" bindscrolltolower="onReachBottom" class="con">
+        <block wx:for="{{listData}}" wx:key="wx:key" index="index">
+          <view class="con-item">
+              <view class="con-avar">
+                <image src="{{item.icon}}"/>
+              </view>
+              <view class="con-content">
+                <text class="name">{{item.user_name}} {{item.mobile}}</text>
+                <text class="to-method">前往方式: {{item.ridingName}}</text>
+                <text class="to-method line">报名项目: {{item.project_name}}</text>
+                <view class="remark">
+                  <view class="rtxt">
+                    <text wx:if="{{item.remark}}">备注:{{item.return_visit == 1?'【去】': item.return_visit == 2?'【不去】':''}} {{item.remark}}</text>
+                  </view>
+                  <view class="rbtn">
+                    <view hidden="{{!item.remark}}" class="prohibit" data-index="{{index}}" bindtap="remarkData">已备注</view>
+                    <view hidden="{{item.remark || remarkOver===index}}" data-index="{{index}}" bindtap="remarkData">备注</view>
+                  </view>
+                </view>
+              </view>
+              <view class="label"/>
+          </view>
+        </block>
+        <view wx:if="{{isOver && listData.length>0}}" class="bottomline">—没有更多了—</view>
+        <view class="noData" wx:if="{{listData.length === 0}}">
+          <image src="../assets/images/no-data.png"/>
+          <text>没有数据了</text>
+        </view>
+    </scroll-view>
+
+    <!-- <view wepy:else class="list">
+      <view class="iconImage">
+        暂无签到
+      </view>
+    </view> -->
+    
+    <view class="remarkcon" cantouchmove="true" style="{{'height:'+$remark$height+'px'}}" catchtap="$remark$hideModal" wx:if="{{showBg}}">
+        <view class="con" catchtap="$remark$true">
+            <view class="con-line">
+                <view class="btn {{$remark$return_visit === 1?'right':''}}" id="right" bindtap="$remark$choose">去</view>
+                <view class="btn {{$remark$return_visit === 2?'right':''}}" id="no" bindtap="$remark$choose">不去</view>
+            </view>
+            <view class="con-content">
+              <textarea bindinput="$remark$getData" value=""/>
+            </view>
+            <view class="fbtn" bindtap="$remark$subData">确认</view>
+        </view>
+    </view>
+
+    
+  <view class="menu" cantouchmove="true" wx:if="{{showMask}}">
+
+  <view class="models" bindtap="$menu$hidModel"/>
+
+    <view class="menu-con {{$menu$isFilter?'showAnimation':''}}">
+      <view class="m-con"  wx:if="{{$menu$option.type === 'project'}}">
+        <text class="title">去不去</text>
+        <view class="m-item">
+          <radio-group class="radio-group" id="0" bindchange="$menu$radioChange">
+            <label class="radio" wx:for="{{$menu$items[0]}}" wx:key="wx:key">
+              <radio color="#F7F7F7" value="{{item.val}}" checked="{{item.checked}}"/>
+              {{item.name}}
+            </label>
+          </radio-group>
+        </view>
+      </view>
+
+      <view class="m-con"  wx:if="{{$menu$address.length>0}}">
+        <text class="title">乘车点</text>
+        <view class="m-item">
+          <radio-group class="radio-group" id="1" bindchange="$menu$radioChange">
+            <label class="radio" wx:for="{{$menu$address}}" wx:key="wx:key">
+              <radio color="#F7F7F7" value="{{item.ridingId}}" checked="{{item.checked}}"/>
+              {{item.name}}
+            </label>
+          </radio-group>
+        </view>
+      </view>
+
+      <view class="m-con" wx:if="{{$menu$false}}">
+        <text class="title">卖场地址</text>
+        <view class="m-item">
+          <radio-group class="radio-group" id="2" bindchange="$menu$radioChange">
+            <label class="radio" wx:for="{{$menu$items[2]}}" wx:key="wx:key">
+              <radio color="#F7F7F7" value="{{item.val}}" checked="{{item.checked}}"/>
+              {{item.name}}
+            </label>
+          </radio-group>
+        </view>
+      </view>
+      <view class="foot">
+        <view class="clear" bindtap="$menu$clear">清空</view>
+        <view class="confirm" bindtap="$menu$confirmData">确认</view>
+      </view>
+    </view>
+  </view>
+
+  </view>

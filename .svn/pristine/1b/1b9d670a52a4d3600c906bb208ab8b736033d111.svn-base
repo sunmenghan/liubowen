@@ -1,0 +1,231 @@
+<style lang="less">
+  page {
+   background-color: #F7F7F7;
+  }
+
+  .title {
+    background-color: #fff;
+    padding-top: 60rpx;
+    padding-bottom: 100rpx;
+    text-align: center;
+    >.hint {
+      color: #666;
+      font-size: 16px;
+      margin-bottom: 30rpx;
+    }
+    >.money {
+      color: #333;
+      font-size: 14px;
+      >.price {
+        color: #e94816;
+      }
+    }
+  }
+
+  .box {
+    width: 324rpx;
+    height: 324rpx;
+    background-color: #fff;
+    margin: 0 auto;
+    border: 1px solid #e9e9e9;
+    margin-top: 54rpx;
+    margin-bottom: 20rpx;
+    >.codeImg {
+      width: 270rpx;
+      height: 270rpx;
+      margin: 0 auto;
+      margin-top: 26rpx;
+    }
+  }
+
+  .tip {
+    font-size: 12px;
+    color: #666;
+  }
+
+  .buttonGroup {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 70rpx;
+    > view {
+      width: 240rpx;
+      height: 68rpx;
+      line-height: 68rpx;
+      text-align: center;
+      font-size: 14px;
+    }
+    >.left {
+      border: 1px solid #ff5d22;
+      color: #ff5d22;
+      margin-right:40rpx;
+    }
+    >.right {
+      color: #fff;
+      background-color: #ff5d22;
+    }
+  }
+/*下单成功*/
+.icon_y{
+  width:186rpx;
+  background:#FF5D22;
+  height:186rpx;
+  border-radius:100px;
+  text-align:center;
+  margin:0 auto;
+  margin-top:76rpx;
+}
+.icon_y image{
+  width:72rpx;
+  height:52rpx;
+  margin-top:66rpx;
+}
+.paySuccessText{
+  text-align:center;
+  margin-top:28rpx;
+  font-size:40rpx;
+}
+.pay_24_Clock{
+  text-align:center;
+  color:#888888;
+  font-size:32rpx;
+  margin:0 20rpx;
+  margin-top:76rpx;
+}
+.pay_btn{
+  width:670rpx;
+  height:94rpx;
+  line-height:94rpx;
+  border-radius:20rpx;
+  font-size:36rpx;
+  text-align:center;
+  margin:0 auto;
+}
+.payNext{
+margin-top:48rpx;
+margin-bottom:30rpx;
+  color:#FFF;
+  background:#FF5D22;
+}
+.payScan{
+  border:1px solid #ccc;
+}
+</style>
+
+<template>
+  <view wx:if='{{!payWay}}'>
+        <view class='icon_y'>
+           <image src='../assets/images/icon_y.png' />
+        </view>
+        <view class='paySuccessText'>下单成功</view>
+        <view class='pay_24_Clock'>订金单已生成，请用户于24h内在用户端小程序个人中心我的订金中支付</view>
+        <view class='payNext pay_btn'  @tap="other">返回首页</view>
+        <view class='payScan pay_btn' @tap='payScan'>扫码支付</view>
+  </view>
+
+  <view wx:elif='{{payWay}}'>
+    <view class="title">
+      <view class="hint">请在2小时内完成支付</view>
+      <view class="money">应付金额:<text class="price">\t{{price}} \t</text>元</view>
+
+      <view class="box">
+        <image src="{{imgUrl}}" class="codeImg"/>
+      </view>
+      <view class="tip">扫一扫上面的二维码图案，进行付款</view>
+    </view>
+
+    <view class="buttonGroup">
+      <view class="left" @tap="other">返回首页</view>
+      <view class="right" @tap="over">完成支付</view>
+    </view>
+  </view>
+
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import toastMixin from '../mixins/toast'
+  import api from '../mixins/api'
+  import util from '../mixins/util'
+
+  export default class Pay extends wepy.page {
+    config = {
+      navigationBarTitleText: '下单成功',
+      navigationBarBackgroundColor: '#FF5D22',
+      navigationBarTextStyle: 'white'
+    }
+
+    data = {
+      id: '',
+      price: '',
+      imgUrl: '',
+      payWay:false
+    }
+    mixins = [toastMixin, api, util]
+
+    onLoad(option) {
+      let that = this
+      that.id = option.id;
+      that.price = option.price;
+      that.$apply()
+      let devUrl = this.url;
+
+      let token = wepy.getStorageSync('token');
+      let toke = wepy.getStorageSync('tokenid');
+
+      console.log(toke,"toke")
+
+       wx.downloadFile({
+        url: devUrl + 'soinfo/pay.json?so_id='+option.id,
+        header: {
+          'token': ''+token+'',
+          'tokenid': ''+toke+''
+        },
+        success (res) {
+          console.log(res, 22222)
+          console.log(res.tempFilePath)
+          that.imgUrl = res.tempFilePath
+          that.$apply()
+        },fail(res){
+          console.log(res,"啊哈哈")
+        }
+      })
+
+    }
+
+    methods = {
+      payScan(){
+        this.payWay = true;
+        wx.setNavigationBarTitle({title: '扫码支付'})
+      },
+
+
+      other () {
+        wx.navigateTo({
+          url: './subscription?pay=pay'
+        })
+
+        /**this.$redirect({
+          url: './subscription?pay=pay'
+        })**/
+
+
+      },
+
+      over () {
+        // 检查
+        this.checkPay(this.id).then(res => {
+          console.log(res)
+          if (res.data.data) {
+            this.$redirect({
+              url: './index'
+            })
+          } else {
+            this.selfToast('支付失败！请重试！', 'none')
+            return false
+          }
+        })
+      }
+    }
+  }
+</script>

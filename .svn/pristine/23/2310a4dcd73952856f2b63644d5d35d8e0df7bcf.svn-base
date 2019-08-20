@@ -1,0 +1,29 @@
+
+  <view class="main">
+    <view class="header">
+      <text class="project">{{list[0].project_name || '该集采暂无订金单记录'}}</text>
+      <text class="total"  wx:if="{{list.length}}">（共 {{records}} 户下单）</text>
+    </view>
+
+    <view class="list"  wx:for="{{list}}" wx:key="index" index="index" item="item">
+      <view class="iconImage">
+        <image src="{{item.icon}}" class="icon"/>
+      </view>
+      <view class="right">
+        <view class="rightItem">
+          <text class="name">{{item.user_name}} {{item.mobile}}</text>
+          <text class="orange">{{item.status == '0' ? '待支付' : item.status == '-1' ? '取消' : item.status == '-2' ? '已退单' : item.status == '1' ? '待转单' : '已转单'}}</text>
+        </view>
+        <view class="rightItem">
+          <text class="bottom">{{item.village_name}} {{item.door_number}}</text>
+          <text class="bottom">{{item.update_at}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- <view wepy:else class="list">
+      <view class="iconImage">
+        暂无签到
+      </view>
+    </view> -->
+  </view>

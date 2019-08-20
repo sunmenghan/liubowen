@@ -1,0 +1,60 @@
+page {
+  background: #f7f7f7;
+}
+.signMain {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+.signMain > .group {
+  flex: 1;
+  width: 100%;
+  text-align: center;
+  background-color: #fff;
+  padding-top: 96rpx;
+}
+.signMain > .group .yes {
+  width: 90rpx;
+  height: 90rpx;
+  margin-bottom: 30rpx;
+}
+.signMain > .group text {
+  font-size: 15px;
+  font-weight: 400;
+  color: #666;
+  line-height: 30rpx;
+}
+.signMain > .group .buttonGroup {
+  display: flex;
+  justify-content: space-around;
+  padding: 100rpx;
+}
+.signMain > .group .buttonGroup .mainColor {
+  background-color: #FF5D22;
+  color: #fff;
+}
+.signMain > .userInfo {
+  flex: 1;
+  width: 100%;
+  text-align: center;
+  background-color: #fff;
+  padding-top: 96rpx;
+  margin-top: 20rpx;
+  font-size: 15px;
+  font-weight: 400;
+  color: #666;
+}
+.signMain > .userInfo > .imgView image {
+  width: 128rpx;
+  height: 128rpx;
+  border-radius: 50%;
+}
+.signMain > .userInfo .text {
+  display: inline-block;
+  margin: 20rpx 0;
+}
+.signMain > .userInfo view {
+  padding-top: 10rpx;
+}

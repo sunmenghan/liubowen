@@ -1,0 +1,59 @@
+<style lang="less" scoped>
+  .main {
+    width: 100%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    padding-top: 300rpx;
+    
+    >text {
+      color: #333;
+      font-size: 28rpx;
+      margin-top: 30rpx;
+      margin-bottom: 30rpx
+    }
+  }
+</style>
+
+<template>
+  <view class="main">
+    <icon type="warn" size="40"></icon>
+    <text>{{error}}</text>
+    <button @tap="tryAgain" plain size="mini">重试</button>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import api from '../mixins/api'
+import toastMixin from '../mixins/toast'
+import util from '../mixins/util'
+
+export default class lose extends wepy.page {
+  config = {
+    navigationBarTitleText: '扫描结果',
+    navigationBarBackgroundColor: '#FF5D22',
+    navigationBarTextStyle: 'white'
+  }
+
+  data = {
+    error: ''
+  }
+
+  mixins = [toastMixin, api, util]
+  methods = {
+    tryAgain () {
+      this.$wxapp.type = true
+      wepy.navigateBack({
+        delta: 1
+      })
+    }
+  }
+
+  onLoad(option) {
+    this.error = option.error
+    this.$apply()
+  }
+}
+</script>

@@ -1,0 +1,33 @@
+{
+  "pages": [
+    "pages/index",
+    "pages/member",
+    "pages/review",
+    "pages/signSearch",
+    "pages/addAddress",
+    "pages/EditSub",
+    "pages/contactList",
+    "pages/modifyAddress",
+    "pages/login",
+    "pages/address",
+    "pages/subList",
+    "pages/pay",
+    "pages/subscription",
+    "pages/lose",
+    "pages/signIn",
+    "pages/signOk",
+    "pages/signInList",
+    "pages/groupBuy",
+    "pages/contactAdd",
+    "pages/audit",
+    "pages/checkRoomAdmin"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "WeChat",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#f7f7f7"
+  },
+  "sitemapLocation": "sitemap.json"
+}

@@ -1,0 +1,303 @@
+<style lang="less">
+  .menu{
+    width: 100%;
+    background-color: rgba(1,1,1,0.5);
+  }
+  .menu-con{
+    position: fixed;
+    width:100%;
+    top: 210rpx;
+    left: 0;
+    padding-bottom: 20rpx;
+    z-index: 10;
+    animation: all .3s linear;
+    .m-con{
+      display: flex;
+      flex-direction: column;
+      padding-left: 40rpx;
+      background-color: #ffffff;
+      align-items: flex-start;
+      padding-bottom: 12rpx;
+      .title{
+        height: 44px;
+        line-height: 44px;
+        color: #333333;
+        font-size: 14px;
+      }
+      .m-item{
+        display: flex;
+        align-items: flex-start;
+        font-size: 14px;
+        color: #666666;
+        width: 100%;
+        .radio-group{
+          width: 100%;
+          display:flex;
+          flex-wrap:wrap;
+          .radio{
+            display:flex;
+            width:33%;
+            align-items:center;
+            margin-top: 20rpx;
+            margin-bottom: 14rpx;
+          }
+        }
+      }
+    }
+    .foot{
+      display: flex;
+      height: 50px;
+      line-height: 50px;
+      text-align: center;
+      .clear{
+        background-color: #E9E9E9;
+        color: #999999;
+        font-size: 15px;
+        flex: 1;
+      }
+      .confirm{
+        background-color: #FF5D22;
+        color: #ffffff;
+        font-size: 15px;
+        flex: 1;
+      }
+    }
+  }
+  radio .wx-radio-input.wx-radio-input-checked::before{
+    border-radius: 50%;/* 圆角 */
+    width: 22px; /* 选中后对勾大小，不要超过背景的尺寸 */
+    height: 22px; /* 选中后对勾大小，不要超过背景的尺寸 */
+    line-height: 22px;
+    text-align: center;
+    font-size:30rpx; /* 对勾大小 30rpx */
+    color: #333333; /* 对勾颜色 白色 */
+    background: transparent;
+    transform:translate(-50%, -50%) scale(1);
+    -webkit-transform:translate(-50%, -50%) scale(1);
+  }
+  radio .wx-radio-input{
+    border-radius: 50%;/* 圆角 */
+    width: 22px;
+    height: 22px;
+    background-color: #f7f7f7;
+    border: none;
+  }
+  showAnimation{
+    color: red !important;
+  }
+  .models{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.5);
+  }
+</style>
+<template>
+  <view class="menu" catchtouchmove="true"  >
+
+  <view class='models' @tap="hidModel" catchtouchmove='movetrue'></view>
+
+    <view class="menu-con {{isFilter?'showAnimation':''}}">
+      <view class="m-con" wx:if="{{option.type == 0}}">
+        <text class="title">去不去</text>
+        <view class="m-item">
+          <radio-group class="radio-group" id="0" bindchange="radioChange">
+            <label class="radio" wx:for="{{items[0]}}" wx:key>
+              <radio color="#F7F7F7" value="{{item.val}}" checked="{{item.checked}}" />
+              {{item.name}}
+            </label>
+          </radio-group>
+        </view>
+      </view>
+
+      <view class="m-con" wx:if="{{address.length>0}}">
+        <text class="title">乘车点</text>
+        <view class="m-item">
+          <radio-group class="radio-group" id="1" bindchange="radioChange">
+            <label class="radio" wx:for="{{address}}" wx:key>
+              <radio color="#F7F7F7" value="{{item.ridingId}}" checked="{{item.checked}}" />
+              {{item.name}}
+            </label>
+          </radio-group>
+        </view>
+      </view>
+
+      <view class="m-con" wx:if="{{false}}">
+        <text class="title">卖场地址</text>
+        <view class="m-item">
+          <radio-group class="radio-group" id="2" bindchange="radioChange">
+            <label class="radio" wx:for="{{items[2]}}" wx:key>
+              <radio color="#F7F7F7" value="{{item.val}}" checked="{{item.checked}}" />
+              {{item.name}}
+            </label>
+          </radio-group>
+        </view>
+      </view>
+      <view class="foot">
+        <view class="clear" @tap="clear">清空</view>
+        <view class="confirm" @tap="confirmData">确认</view>
+      </view>
+    </view>
+  </view>
+</template>
+<script>
+  import wepy from 'wepy'
+  import toastMixin from '../mixins/toast'
+  import api from '../mixins/api'
+  import util from '../mixins/util'
+
+  export default class menu extends wepy.component {
+    props = {
+      isFilter: {
+        type: Boolean,
+        default: false,
+        toWay: true
+      }
+    }
+
+    mixins = [api, toastMixin, util]
+
+    data = {
+      items: [
+        [
+          {name: '去', val: 1, checked: false},
+          {name: '不去', val: 2, checked: false},
+          {name: '无', val: 0, checked: false}
+        ],
+        [
+          {name: '金星路', val: 0, checked: false},
+          {name: '侯家塘', val: 1, checked: false},
+          {name: '侯家塘', val: 2, checked: false},
+          {name: '侯家塘', val: 2, checked: false}
+        ],
+        [
+          {name: '金星路', val: 0, checked: false},
+          {name: '侯家塘', val: 1, checked: false},
+          {name: '侯家塘', val: 2, checked: false},
+          {name: '侯家塘', val: 2, checked: false},
+          {name: '金星路', val: 0, checked: false}
+        ],
+        [
+          {name: '已签到', val: 0, checked: false},
+          {name: '没有签到', val: 1, checked: false}
+        ]
+      ],
+      height: 0,
+      checked: {},
+      address: [],
+      option: ''
+    }
+
+    events = {
+      getData(addr, option) {
+        console.log('addr', addr, 'option', option)
+        this.address = addr
+        this.option = option
+        this.$apply()
+      }
+
+    }
+
+    methods = {
+       hidModel(){
+         this.$emit("hideModel",false)
+      },
+      // 选择
+      radioChange(e) {
+        let id = parseInt(e.currentTarget.id)
+        let val = e.detail.value
+        let check = this.checked
+        if (id == 0) {
+          check.go = val
+        } else if (id == 1) {
+          check.addr = val
+        } else {
+          check.shop = val
+        }
+        this.checked = check
+        this.$apply();
+
+      },
+
+      clear(e) {
+        let items = this.items
+        let address = this.address
+        for (let o of items[0]) {
+          o.checked = false
+        }
+        for (let o of address) {
+          o.checked = false
+        }
+        this.items = items
+        this.address = address
+        this.checked = {}
+        this.$apply()
+      },
+
+      confirmData() {
+        let check = this.checked
+
+        let address = this.address
+        let option = this.option
+       // let tip = ''
+        // if (!check.go) {
+        //   if (option.type) {
+        //     tip = '未选择签到'
+        //   } else {
+        //     tip = '请选择去不去'
+        //   }
+        // } else if (!check.addr) {
+        //   tip = '请选择乘车点'
+        // }
+        // if (tip) {
+        //   wx.showToast({title: tip})
+        //   return false
+        // }
+        if (address.length > 0) {
+          let data = {
+            base_id: address[0].baseId,
+            page: 1,
+            pagesize: 10
+          }
+          if (check.addr) data.riding_id = check.addr
+          if (option.type==0) {
+            let user = wepy.getStorageSync('user')
+            data.group_id = user.id
+          } else {
+            data.return_visit = 1
+          }
+
+          if (check.go) data.return_visit = check.go
+
+          console.log(data,"check.gocheck.gocheck.go")
+
+          this.getEnrollData(data).then(res => {
+            console.log('res', res)
+            let listData = res.data.data.list
+            if (listData.length > 0) {
+              listData[0].filter = data
+              console.log('data', data)
+              listData[0].isFilter = true
+            }
+            this.$emit('changeData', listData)
+             this.checked.go = 0;
+             this.$apply();
+          })
+        } else {
+          wx.showToast({
+            title: '暂时没有数据'
+          })
+        }
+      }
+    }
+
+    onLoad() {
+      let h = wx.getSystemInfoSync().windowHeight
+      this.height = h - 55
+      console.log('optionmenu', this.isFilter)
+      this.$apply()
+    }
+}
+</script>

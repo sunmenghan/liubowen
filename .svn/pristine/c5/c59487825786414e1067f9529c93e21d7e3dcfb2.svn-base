@@ -1,0 +1,101 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _wepy = require('./../npm/wepy/lib/wepy.js');
+
+var _wepy2 = _interopRequireDefault(_wepy);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var toast = function (_wepy$mixin) {
+  _inherits(toast, _wepy$mixin);
+
+  function toast() {
+    _classCallCheck(this, toast);
+
+    return _possibleConstructorReturn(this, (toast.__proto__ || Object.getPrototypeOf(toast)).apply(this, arguments));
+  }
+
+  _createClass(toast, [{
+    key: 'showToast',
+
+    // showToast
+    value: function showToast() {
+      _wepy2.default.showToast({
+        title: '加载中...',
+        icon: 'loading',
+        duration: 3000
+      });
+    }
+
+    // selfToast
+
+  }, {
+    key: 'selfToast',
+    value: function selfToast(title, icon, duration) {
+      _wepy2.default.showToast({
+        title: title,
+        icon: icon || 'success',
+        duration: duration || 2000
+      });
+    }
+
+    // hideToast
+
+  }, {
+    key: 'hideToast',
+    value: function hideToast() {
+      _wepy2.default.hideToast();
+    }
+
+    // loading
+
+  }, {
+    key: 'showLoading',
+    value: function showLoading(message) {
+      if (wx.showLoading) {
+        wx.showLoading({
+          title: message || '加载中。。',
+          mask: true
+        });
+      } else {
+        // 低版本兼容处理
+        wx.showToast({
+          title: message || '加载中。。',
+          icon: 'loading',
+          mask: true,
+          duration: 20000
+        });
+      }
+    }
+
+    // hideLoading
+
+  }, {
+    key: 'hideLoading',
+    value: function hideLoading() {
+      if (wx.hideLoading) {
+        wx.hideLoading();
+      } else {
+        wx.showToast();
+      }
+    }
+  }]);
+
+  return toast;
+}(_wepy2.default.mixin);
+
+exports.default = toast;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInRvYXN0LmpzIl0sIm5hbWVzIjpbInRvYXN0Iiwid2VweSIsInNob3dUb2FzdCIsInRpdGxlIiwiaWNvbiIsImR1cmF0aW9uIiwiaGlkZVRvYXN0IiwibWVzc2FnZSIsInd4Iiwic2hvd0xvYWRpbmciLCJtYXNrIiwiaGlkZUxvYWRpbmciLCJtaXhpbiJdLCJtYXBwaW5ncyI6Ijs7Ozs7Ozs7O0FBQUE7Ozs7Ozs7Ozs7OztJQUVxQkEsSzs7Ozs7Ozs7Ozs7O0FBQ3BCO2dDQUNjO0FBQ1hDLHFCQUFLQyxTQUFMLENBQWU7QUFDYkMsZUFBTyxRQURNO0FBRWJDLGNBQU0sU0FGTztBQUdiQyxrQkFBVTtBQUhHLE9BQWY7QUFLRDs7QUFFRjs7Ozs4QkFDWUYsSyxFQUFPQyxJLEVBQU1DLFEsRUFBVTtBQUNoQ0oscUJBQUtDLFNBQUwsQ0FBZTtBQUNiQyxlQUFPQSxLQURNO0FBRWJDLGNBQU1BLFFBQVEsU0FGRDtBQUdiQyxrQkFBVUEsWUFBWTtBQUhULE9BQWY7QUFLRDs7QUFFRjs7OztnQ0FDYztBQUNYSixxQkFBS0ssU0FBTDtBQUNEOztBQUVGOzs7O2dDQUNjQyxPLEVBQVM7QUFDcEIsVUFBSUMsR0FBR0MsV0FBUCxFQUFvQjtBQUNsQkQsV0FBR0MsV0FBSCxDQUFlO0FBQ2JOLGlCQUFPSSxXQUFXLE9BREw7QUFFYkcsZ0JBQU07QUFGTyxTQUFmO0FBSUQsT0FMRCxNQUtPO0FBQ0w7QUFDQUYsV0FBR04sU0FBSCxDQUFhO0FBQ1hDLGlCQUFPSSxXQUFXLE9BRFA7QUFFWEgsZ0JBQU0sU0FGSztBQUdYTSxnQkFBTSxJQUhLO0FBSVhMLG9CQUFVO0FBSkMsU0FBYjtBQU1EO0FBQ0Y7O0FBRUQ7Ozs7a0NBQ2U7QUFDYixVQUFJRyxHQUFHRyxXQUFQLEVBQW9CO0FBQ2xCSCxXQUFHRyxXQUFIO0FBQ0QsT0FGRCxNQUVPO0FBQ0xILFdBQUdOLFNBQUg7QUFDRDtBQUNGOzs7O0VBakRnQ0QsZUFBS1csSzs7a0JBQW5CWixLIiwiZmlsZSI6InRvYXN0LmpzIiwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IHdlcHkgZnJvbSAnd2VweSdcclxuXHJcbmV4cG9ydCBkZWZhdWx0IGNsYXNzIHRvYXN0IGV4dGVuZHMgd2VweS5taXhpbiB7XHJcblx0Ly8gc2hvd1RvYXN0XHJcbiAgc2hvd1RvYXN0ICgpIHtcclxuICAgIHdlcHkuc2hvd1RvYXN0KHtcclxuICAgICAgdGl0bGU6ICfliqDovb3kuK0uLi4nLFxyXG4gICAgICBpY29uOiAnbG9hZGluZycsXHJcbiAgICAgIGR1cmF0aW9uOiAzMDAwXHJcbiAgICB9KVxyXG4gIH1cclxuXHJcblx0Ly8gc2VsZlRvYXN0XHJcbiAgc2VsZlRvYXN0ICh0aXRsZSwgaWNvbiwgZHVyYXRpb24pIHtcclxuICAgIHdlcHkuc2hvd1RvYXN0KHtcclxuICAgICAgdGl0bGU6IHRpdGxlLFxyXG4gICAgICBpY29uOiBpY29uIHx8ICdzdWNjZXNzJyxcclxuICAgICAgZHVyYXRpb246IGR1cmF0aW9uIHx8IDIwMDBcclxuICAgIH0pXHJcbiAgfVxyXG5cclxuXHQvLyBoaWRlVG9hc3RcclxuICBoaWRlVG9hc3QgKCkge1xyXG4gICAgd2VweS5oaWRlVG9hc3QoKVxyXG4gIH1cclxuXHJcblx0Ly8gbG9hZGluZ1xyXG4gIHNob3dMb2FkaW5nIChtZXNzYWdlKSB7XHJcbiAgICBpZiAod3guc2hvd0xvYWRpbmcpIHtcclxuICAgICAgd3guc2hvd0xvYWRpbmcoe1xyXG4gICAgICAgIHRpdGxlOiBtZXNzYWdlIHx8ICfliqDovb3kuK3jgILjgIInLFxyXG4gICAgICAgIG1hc2s6IHRydWVcclxuICAgICAgfSlcclxuICAgIH0gZWxzZSB7XHJcbiAgICAgIC8vIOS9jueJiOacrOWFvOWuueWkhOeQhlxyXG4gICAgICB3eC5zaG93VG9hc3Qoe1xyXG4gICAgICAgIHRpdGxlOiBtZXNzYWdlIHx8ICfliqDovb3kuK3jgILjgIInLFxyXG4gICAgICAgIGljb246ICdsb2FkaW5nJyxcclxuICAgICAgICBtYXNrOiB0cnVlLFxyXG4gICAgICAgIGR1cmF0aW9uOiAyMDAwMFxyXG4gICAgICB9KVxyXG4gICAgfVxyXG4gIH1cclxuXHJcbiAgLy8gaGlkZUxvYWRpbmdcclxuICBoaWRlTG9hZGluZyAoKSB7XHJcbiAgICBpZiAod3guaGlkZUxvYWRpbmcpIHtcclxuICAgICAgd3guaGlkZUxvYWRpbmcoKVxyXG4gICAgfSBlbHNlIHtcclxuICAgICAgd3guc2hvd1RvYXN0KClcclxuICAgIH1cclxuICB9XHJcbn1cbiJdfQ==

@@ -1,0 +1,22 @@
+
+  <view class="signMain">
+    <!-- 功能块 -->
+    <view class="group">
+      <view>
+        <image class="yes" src="../assets/images/icon_yycg.png"/>
+      </view>
+      <text>签到成功</text>
+      <view class="buttonGroup">
+        <button size="mini" plain bindtap="lookView">查看详情</button>
+        <button size="mini" class="mainColor" bindtap="code">继续签到</button>
+      </view>
+    </view>
+
+    <view class="userInfo">
+      <view class="imgView">
+        <image class="yes" src="{{icon}}"/>
+      </view>
+      <text class="text">{{user_name}}</text>
+      <view>{{village_name}} {{door_number}}</view>
+    </view>
+  </view>

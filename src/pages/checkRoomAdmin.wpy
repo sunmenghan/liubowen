@@ -1,0 +1,95 @@
+<style lang="less">
+  page {
+    background-color: #f7f7f7;
+  }
+
+  .search {
+    padding: 44rpx 28rpx;
+    background-color: #fff;
+    margin-bottom: 20rpx;
+    >.flex-row {
+      display:flex;
+      flex-wrap:wrap;
+      align-items:center;
+      border-radius: 46rpx;
+      border: 1px solid #e9e9e9;
+      padding: 20rpx;
+      padding-bottom: 10rpx;
+    }
+    .login-icon {
+      width:30rpx;
+      height:36rpx;
+      margin-right:20rpx;
+      margin-left: 20rpx;
+    }
+  }
+
+  .placeholder {
+    font-size:14px;
+    color: #666;
+  }
+
+  .audit {
+    display: flex;
+    align-items: center;
+    padding: 40rpx 30rpx;
+    justify-content: space-around;
+    background-color: #fff;
+    > .audit-icon {
+      width: 42rpx;
+      height: 42rpx;
+    }
+    > .title {
+      font-size: 15px;
+      color: #333;
+      padding-left: 20rpx;
+    }
+  }
+</style>
+
+<template>
+  <view>
+    <!-- 顶部搜索栏 -->
+    <view class="search">
+      <view class="flex-row input-group">
+        <label><image class="login-icon" src="../assets/images/icon_ss.png"/></label>
+        <input type="number" placeholder="搜索" placeholder-class="placeholder" style="font-size:14px;" confirm-type="search" bindinput="searchInput" maxlength="11"/>
+      </view>
+    </view>
+
+    <view class="audit">
+      <image src="../assets/images/icon_sh@2x.png" class="audit-icon"/>
+      <text class="title">退款审核</text>
+      <view>
+        <text>3</text>
+        <text> > </text>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  // import toastMixin from '../mixins/toast'
+  // import api from '../mixins/api'
+  // import util from '../mixins/util'
+
+  export default class CheckRoomAdmin extends wepy.page {
+    config = {
+      navigationBarTitleText: '验房管理',
+      navigationBarBackgroundColor: '#FF5D22',
+      navigationBarTextStyle: 'white'
+    }
+
+    methods = {
+      // 搜索
+      searchInput (e) {
+        console.log(e.detail.value)
+        let value = e.detail.value
+        if (value && value.length === 11) {
+        } else {
+        }
+      }
+    }
+  }
+</script>

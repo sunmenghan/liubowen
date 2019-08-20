@@ -1,0 +1,107 @@
+page {
+  background-color: #F7F7F7;
+}
+.title {
+  background-color: #fff;
+  padding-top: 60rpx;
+  padding-bottom: 100rpx;
+  text-align: center;
+}
+.title > .hint {
+  color: #666;
+  font-size: 16px;
+  margin-bottom: 30rpx;
+}
+.title > .money {
+  color: #333;
+  font-size: 14px;
+}
+.title > .money > .price {
+  color: #e94816;
+}
+.box {
+  width: 324rpx;
+  height: 324rpx;
+  background-color: #fff;
+  margin: 0 auto;
+  border: 1px solid #e9e9e9;
+  margin-top: 54rpx;
+  margin-bottom: 20rpx;
+}
+.box > .codeImg {
+  width: 270rpx;
+  height: 270rpx;
+  margin: 0 auto;
+  margin-top: 26rpx;
+}
+.tip {
+  font-size: 12px;
+  color: #666;
+}
+.buttonGroup {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-top: 70rpx;
+}
+.buttonGroup > view {
+  width: 240rpx;
+  height: 68rpx;
+  line-height: 68rpx;
+  text-align: center;
+  font-size: 14px;
+}
+.buttonGroup > .left {
+  border: 1px solid #ff5d22;
+  color: #ff5d22;
+  margin-right: 40rpx;
+}
+.buttonGroup > .right {
+  color: #fff;
+  background-color: #ff5d22;
+}
+/*下单成功*/
+.icon_y {
+  width: 186rpx;
+  background: #FF5D22;
+  height: 186rpx;
+  border-radius: 100px;
+  text-align: center;
+  margin: 0 auto;
+  margin-top: 76rpx;
+}
+.icon_y image {
+  width: 72rpx;
+  height: 52rpx;
+  margin-top: 66rpx;
+}
+.paySuccessText {
+  text-align: center;
+  margin-top: 28rpx;
+  font-size: 40rpx;
+}
+.pay_24_Clock {
+  text-align: center;
+  color: #888888;
+  font-size: 32rpx;
+  margin: 0 20rpx;
+  margin-top: 76rpx;
+}
+.pay_btn {
+  width: 670rpx;
+  height: 94rpx;
+  line-height: 94rpx;
+  border-radius: 20rpx;
+  font-size: 36rpx;
+  text-align: center;
+  margin: 0 auto;
+}
+.payNext {
+  margin-top: 48rpx;
+  margin-bottom: 30rpx;
+  color: #FFF;
+  background: #FF5D22;
+}
+.payScan {
+  border: 1px solid #ccc;
+}

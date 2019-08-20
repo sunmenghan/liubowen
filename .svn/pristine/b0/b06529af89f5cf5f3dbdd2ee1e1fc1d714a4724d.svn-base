@@ -1,0 +1,19 @@
+
+  <view>
+    <!-- 顶部搜索栏 -->
+    <view class="search">
+      <view class="flex-row input-group">
+        <label><image class="login-icon" src="../assets/images/icon_ss.png"/></label>
+        <input type="number" placeholder="搜索" placeholder-class="placeholder" style="font-size:14px;" confirm-type="search" bindinput="searchInput" maxlength="11"/>
+      </view>
+    </view>
+
+    <view class="audit">
+      <image src="../assets/images/icon_sh@2x.png" class="audit-icon"/>
+      <text class="title">退款审核</text>
+      <view>
+        <text>3</text>
+        <text> > </text>
+      </view>
+    </view>
+  </view>

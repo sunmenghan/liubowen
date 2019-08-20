@@ -1,0 +1,27 @@
+
+  <view  wx:if="{{!payWay}}">
+        <view class="icon_y">
+           <image src="../assets/images/icon_y.png"/>
+        </view>
+        <view class="paySuccessText">下单成功</view>
+        <view class="pay_24_Clock">订金单已生成，请用户于24h内在用户端小程序个人中心我的订金中支付</view>
+        <view class="payNext pay_btn" bindtap="other">返回首页</view>
+        <view class="payScan pay_btn" bindtap="payScan">扫码支付</view>
+  </view>
+
+  <view  wx:elif="{{payWay}}">
+    <view class="title">
+      <view class="hint">请在2小时内完成支付</view>
+      <view class="money">应付金额:<text class="price">\t{{price}} \t</text>元</view>
+
+      <view class="box">
+        <image src="{{imgUrl}}" class="codeImg"/>
+      </view>
+      <view class="tip">扫一扫上面的二维码图案，进行付款</view>
+    </view>
+
+    <view class="buttonGroup">
+      <view class="left" bindtap="other">返回首页</view>
+      <view class="right" bindtap="over">完成支付</view>
+    </view>
+  </view>

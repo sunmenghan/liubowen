@@ -1,0 +1,51 @@
+
+  <view class="main">
+    <view class="header">
+      <text class="project">{{options.name || '暂无签到记录'}}</text>
+      <text class="total"  wx:if="{{list.length}}">（共 {{num}} 户签到）</text>
+    </view>
+    <scroll-view scroll-y bindscrolltolower="onReachBottom" style="{{'height:'+(height-50)+'px'}}">
+      <block wx:for="{{list}}" wx:for-index="index" wx:for-item="item" wx:key="key">
+          
+  <view class="item">
+    <view class="h_item">
+      <image class="h_avar" src="{{item.icon}}"/>
+      <view class="c_context">
+        <text class="c_name">{{item.user_name}}</text>
+        <text class="c_text">{{item.project_name}}</text>
+      </view>
+      <view class="c_success"  wx:if="{{item.id}}">
+        <text class="sign">签到成功</text>
+        <text class="time">{{item.create_at}}</text>
+      </view>
+      <view  wx:else>
+        <view class="c_btn" wx:if="{{item.return_visit == 0}}">
+            <view class="btn" catchtap="$item$reVisit" data-com-index="{{index}}">回访</view>
+            <view class="btn" data-phone="{{item.mobile}}" catchtap="$item$reMark" data-com-index="{{index}}">备注</view>
+        </view>
+        <view class="c_btn" wx:else>
+          <view class="btn gray" catchtap="$item$reVisit" data-com-index="{{index}}">回访</view>
+          <view class="btn gray" catchtap="$item$reMark" data-com-index="{{index}}">备注</view>
+        </view>
+      </view>
+    </view>
+   <view class="fmodal" catchtouchmove="$item$true" hidden="{{!$item$showRemark}}" style="{{'height:'+$item$height+'px'}}" data-com-index="{{index}}">
+     <view class="f_content">
+       <view class="title">备注</view>
+       <input class="remark" focus="{{$item$true}}" type="text" bindinput="$item$getData" data-com-index="{{index}}"/>
+       <view class="fbtn">
+         <view class="f_cancel" catchtap="$item$modalCancel" data-com-index="{{index}}">取消</view>
+         <view class="f_confirm" bindtap="$item$modalConfirm" data-com-index="{{index}}">确定</view>
+       </view>
+     </view>
+   </view>
+  </view>
+
+      </block>
+    </scroll-view>
+    <!-- <view wepy:else class="list">
+      <view class="iconImage">
+        暂无签到
+      </view>
+    </view> -->
+  </view>

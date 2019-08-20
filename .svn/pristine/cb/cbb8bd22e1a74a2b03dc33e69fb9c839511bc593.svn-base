@@ -1,0 +1,141 @@
+@import "./../components/menu.wxss";
+@import "./../components/remark.wxss";
+page {
+  background: #f7f7f7;
+}
+.line {
+  border-bottom: 1rpx solid rgba(180, 180, 180, 0.2);
+}
+.header {
+  display: flex;
+  justify-content: space-between;
+  background-color: #fff;
+  padding: 40rpx 40rpx 40rpx 40rpx;
+  z-index: 99;
+}
+.header > .project {
+  color: #000000;
+  font-weight: 500;
+  font-size: 18px;
+}
+.header > .filter {
+  display: flex;
+  align-items: center;
+}
+.header > .filter > image {
+  width: 14px;
+  height: 15px;
+  margin-right: 2px;
+}
+.header > .filter > text {
+  color: #666666;
+  font-size: 14px;
+}
+.con {
+  padding-bottom: 20rpx;
+}
+.con .con-item {
+  margin-top: 20rpx;
+  display: flex;
+  justify-content: flex-start;
+  position: relative;
+  background-color: #ffffff;
+  padding-top: 15px;
+  padding-bottom: 5px;
+}
+.con .con-item .con-avar {
+  flex: 1;
+  text-align: center;
+}
+.con .con-item .con-avar image {
+  width: 35px;
+  height: 35px;
+}
+.con .con-item .con-content {
+  flex: 4;
+  display: flex;
+  flex-direction: column;
+}
+.con .con-item .con-content .name {
+  color: #666666;
+  font-size: 14px;
+  padding-bottom: 13rpx;
+}
+.con .con-item .con-content .to-method {
+  color: #999999;
+  font-size: 12px;
+  padding-bottom: 8rpx;
+}
+.con .con-item .con-content .remark {
+  color: #ED6B42;
+  font-size: 14px;
+  height: 30px ;
+  display: flex;
+  margin-top: 19rpx;
+}
+.con .con-item .con-content .remark .rtxt {
+  flex: 4;
+  display: flex;
+  align-items: center;
+}
+.con .con-item .con-content .remark .rbtn {
+  flex: 1.2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.con .con-item .con-content .remark .rbtn view {
+  background-color: rgba(233, 72, 22, 0.1);
+  color: #E94816;
+  border: 1rpx solid rgba(233, 72, 22, 0.5);
+  height: 25px;
+  width: 44px;
+  text-align: center;
+  line-height: 25px;
+  font-size: 13px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+}
+.con .con-item .label {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+.con .bottomline {
+  background-color: #f7f7f7;
+  color: #666666;
+  width: 100%;
+  height: 40rpx;
+  text-align: center;
+  line-height: 40rpx;
+  font-size: 14px;
+  padding-top: 10rpx;
+  padding-bottom: 10rpx;
+}
+.prohibit {
+  color: #666666 !important;
+  border: 1rpx solid #999999 !important;
+  background-color: #f7f7f7 !important;
+}
+.modal {
+  background-color: #f7f7f7 !important;
+  z-index: 9999;
+  position: relative;
+}
+.noData {
+  text-align: center;
+  margin-top: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.noData image {
+  width: 60px;
+  height: 60px;
+}
+.downImg {
+  width: 20rpx;
+  height: 16rpx;
+}

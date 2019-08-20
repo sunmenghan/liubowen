@@ -1,0 +1,377 @@
+<style lang="less">
+    page {
+      background-color: #f7f7f7;
+    }
+  .lineBackground {
+    background:linear-gradient(180deg,rgba(255,93,34,1) 0%,rgba(255,172,34,1) 100%);
+    height: 40rpx;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    z-index: 999;
+  }
+
+  .container {
+    height: 100%;
+    .head{
+      display: flex;
+      align-items: center;
+      width: 100%;
+      height: 120rpx;
+      justify-content: space-between;
+      background:linear-gradient(180deg,rgba(255,93,34,1) 0%,rgba(255,172,34,1) 100%);
+      .h_avar{
+        color: #ffffff;
+        font-size: 28rpx;
+        display: flex;
+        align-items: center;
+        padding-left: 40rpx;
+        .h_img{
+          width: 48rpx;
+          height: 48rpx;
+          margin-right: 10rpx;
+          border-radius:30rpx;
+        }
+      }
+      .close{
+        width: 44rpx;
+        height: 44rpx;
+        padding-right: 40rpx;
+      }
+    }
+  }
+
+  .userinfo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .userinfo-avatar {
+    width: 80rpx;
+    height: 80rpx;
+    border-radius: 50%;
+  }
+
+  .userinfo-nickname {
+    color: #aaa;
+  }
+
+  .main {
+    height: 280rpx;
+    width: 100%;
+    background-color: #fff;
+    color: rgba(247,247,247,1);
+    display: flex;
+    align-items: center;
+    >.menu {
+      width: 33%;
+      text-align: center;
+      position: relative;
+      >image {
+        width:64rpx;
+        height:72rpx;
+      }
+      >text {
+        display: block;
+        height: 28rpx;
+        font-size:13px;
+        font-family:PingFangSC-Regular;
+        font-weight:400;
+        color:rgba(51,51,51,1);
+        line-height:28px;
+      }
+      >.expect{
+        position:absolute;
+        width:94%;
+        height:180rpx;
+        left:0rpx;
+        top:-18rpx;
+        background-color:rgba(0, 0, 0, 0.5);
+        border-radius:172rpx;
+        text-align:center;
+        line-height:180rpx;
+        font-size:13px;
+      }
+    }
+  }
+
+  .group-buying {
+    width: 100%;
+    margin: 20rpx 0;
+    padding: 40rpx 0;
+    background-color: #fff;
+    >.left {
+      font-size:16px;
+      font-family:HannotateSC-W7;
+      font-weight:normal;
+      color:rgba(255,93,34,1);
+      line-height:17px;
+      padding: 0 24rpx;
+      border-right: 1px solid #E9E9E9;
+    }
+    >.date {
+      display: inline-block;
+      font-size:14px;
+      font-weight:400;
+      color:#666;
+      line-height:14px;
+      padding-left: 10rpx;
+    }
+  }
+  .querySign {
+    display: flex;
+    width: 100%;
+    padding: 35rpx 0;
+    border-bottom: 1px solid #eee;
+    background-color: #fff;
+    >icon {
+      flex: 1;
+      text-align: center;
+    }
+    >view {
+      flex: 5;
+      font-size: 14px;
+      color: #333;
+      line-height: 40rpx;
+      >.rightTap {
+        float: right;
+        padding-right: 20rpx;
+        font-size: 20px;
+        color: #ccc;
+      }
+    }
+  }
+  .logout {
+    background-color: #FF5D22;
+    color: #fff;
+    position: fixed;
+    bottom: 20rpx;
+    border: 1px solid #fff;
+    font-size: 14px;
+    line-height: 60rpx;
+    width: 200rpx;
+  }
+</style>
+<template>
+  <view class="container">
+    <!-- <view class="lineBackground"></view> -->
+    <view class="head">
+      <view class="h_avar">
+        <image class="h_img" src="{{options.icon?options.icon:'../assets/images/touxiang.png'}}"></image>
+        <text>{{options.name}}</text>
+      </view>
+      <image class="close" src="../assets/images/closebtn.png" @tap="logout"></image>
+    </view>
+    <!-- main -->
+    <view class="main">
+
+      <view class="menu" @tap="sub">
+        <image src="../assets/images/Group.png" />
+        <text>收订金</text>
+      </view>
+
+      <view class="menu" id="menu" @tap="queryOrder">
+        <image src="../assets/images/icon_cwjs@2x.png" />
+        <text>参团提醒</text>
+      </view>
+
+      <view class="menu">
+        <image src="../assets/images/icon_sjtj@2x.png" />
+        <text>数据统计</text>
+        <view class="expect">敬请期待</view>
+      </view>
+
+      <view class="menu">
+        <image src="../assets/images/icon_ddgl@2x.png" />
+        <text>认证审核</text>
+        <view class="expect">敬请期待</view>
+      </view>
+    </view>
+
+    <view class="group-buying" @tap="groupBuy">
+      <text class="left">集采安排\t</text>
+      <view class="date">{{list[0].beg_at}}<text>\t</text>{{list[0].project_name}}</view>
+    </view>
+
+    <view class="querySign" @tap="querySign">
+      <icon type="success" size="20" color="#FF5D22"/>
+      <view>
+        <text>用户查询</text>
+        <text class="rightTap">></text>
+      </view>
+    </view>
+
+    <view class="querySign" id="project" @tap="queryOrder">
+      <icon type="success" size="20" color="#FF5D22"/>
+      <view>
+        <text>参团确认</text>
+        <text class="rightTap">></text>
+      </view>
+    </view>
+
+    <!--<view class="querySign" @tap="userAdmin">-->
+      <!--<icon type="success" size="20" color="#FF5D22"/>-->
+      <!--<view>-->
+        <!--<text>用户管理</text>-->
+        <!--<text class="rightTap">></text>-->
+      <!--</view>-->
+    <!--</view>-->
+
+    <!--<view class="querySign" @tap="checkRoomAdmin">-->
+      <!--<icon type="success" size="20" color="#FF5D22"/>-->
+      <!--<view>-->
+        <!--<text>验房管理</text>-->
+        <!--<text class="rightTap">></text>-->
+      <!--</view>-->
+    <!--</view>-->
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import toastMixin from '../mixins/toast'
+  import api from '../mixins/api'
+  import util from '../mixins/util'
+
+  // @connect({
+  //   num (state) {
+  //     return state.counter.num
+  //   },
+  //   asyncNum (state) {
+  //     return state.counter.asyncNum
+  //   },
+  //   sumNum (state) {
+  //     return state.counter.num + state.counter.asyncNum
+  //   }
+  // })
+
+  export default class Index extends wepy.page {
+
+    config = {
+      navigationBarTitleText: '多让运营',
+      navigationBarBackgroundColor: '#FF5D22',
+      navigationBarTextStyle: 'white'
+    }
+
+    mixins = [toastMixin, api, util]
+
+    data = {
+      list: [],
+      reserve: [],
+      options: {},
+      projectName:''
+    }
+
+    methods = {
+      // 点击签到
+      sanCode () {
+        this.shareCode()
+      },
+
+      // 收订金
+      sub () {
+        let re = this.data.reserve
+        this.$navigate('./subscription?data='+ JSON.stringify(re)+'&projectName='+this.projectName+'')
+      },
+
+      // 查询集采
+      querySign () {
+        // let re = this.data.reserve
+        // console.log('re', re)
+        // if (re === null || re === undefined || re.length === 0 || re.length > 1) {
+        //   this.selfToast('没有负责签到')
+        //   return false
+        // }
+        // this.$navigate(`./signInList?base_id=${re[0].base_id}&riding_id=${re[0].riding_id}&name=${re[0].name}`)
+        this.$navigate(`./member`)
+      },
+
+      // 查询订金单
+      queryOrder (e) {
+        let id = e.currentTarget.id
+        let type
+        if (id === 'menu') {
+          type = ''
+        } else {
+          type = id
+        }
+        let re = this.data.reserve
+        if (re && re.length > 0) {
+          this.$navigate(`./review?base_id=${re[0].base_id}&riding_id=${re[0].riding_id}&name=${re[0].name}&type=${type}`)
+        } else {
+          wx.showToast({
+            title: '暂时没有信息'
+          })
+        }
+        // this.$navigate('./subList')
+      },
+
+      // 集采详情
+      groupBuy () {
+        this.$navigate('./groupBuy')
+      },
+
+      // 认证审核
+      audit () {
+        this.$navigate('./audit')
+      },
+
+      // 验房管理
+      checkRoomAdmin () {
+        this.$navigate('./checkRoomAdmin')
+      },
+
+      // 退出登录
+      logout () {
+        // wepy.setStorageSync('token', '')
+        // wepy.setStorageSync('tokenid', '')
+        // wepy.setStorageSync('activity_project_id', '')
+        wepy.clearStorageSync()
+        this.$redirect('./login')
+      }
+    }
+
+    onLoad(options) {
+    }
+
+    onShow() {
+      let that = this
+      that.activityplan({'operType': 0}).then(res => {
+        let user = wepy.getStorageSync('user')
+        that.list = res.data.data
+        that.projectName = res.data.data[0].project_name
+        that.options = user
+        that.reserve = res.data.dataReserve1
+        console.log('retel', res.data.dataReservel)
+        that.$apply()
+        console.log('ret', that.reserve)
+        // 没有项目的话清空缓存
+        if (res.data.data.length === 0) {
+          that.selfToast('暂无集采项目！', 'none')
+          wepy.setStorageSync('sign_project_id', '')
+          wepy.setStorageSync('activity_project_id', '')
+          that.hideToast()
+          return false
+        }
+        // 进行权限判断
+        // 签到权限
+        if (res.data.data[0].oper_type === '1') {
+          wepy.setStorageSync('sign_project_id', res.data.data[0].id)
+        } else if (res.data.data[0].oper_type === '2') {
+          wepy.setStorageSync('activity_project_id', res.data.data[0].id)
+        } else {
+          wepy.setStorageSync('sign_project_id', res.data.data[0].id)
+          wepy.setStorageSync('activity_project_id', res.data.data[0].id)
+        }
+       // res.data.data[0].beg_at = res.data.data[0].beg_at.substring(0, 16)
+      })
+
+      console.log(this.$wxapp.type, 444)
+      if (this.$wxapp.type) {
+        this.$wxapp.type = false
+        this.shareCode()
+      }
+    }
+  }
+</script>

@@ -1,0 +1,56 @@
+
+  <view>
+    <view class="head">
+      <view class="search">
+        <view class="flex-row input-group">
+          <label><image class="login-icon" src="../assets/images/icon_ss.png"/></label>
+          <input type="number" placeholder="输入会员手机号代交订金" placeholder-class="placeholder" confirm-type="search" bindinput="bindPassword" maxlength="11"/>
+        </view>
+          <view class="scan-btn" bindtap="scanCode">
+            <image class="scan-img" src="../assets/images/icon_sys.png"/>
+            <text class="scan-txt">扫码收</text>
+          </view>
+      </view>
+      <!-- 搜索展示框 -->
+      <view class="searchList list"  wx:if="{{flag}}">
+        <view class="iconImage">
+          <image src="{{searchlist.icon}}" class="icon"/>
+        </view>
+        <view class="right">
+          <view class="rightItem">
+            <text class="name">{{searchlist.user_name}} \t{{searchlist.mobile}}</text>
+          </view>
+          <view class="rightItem">
+            <text class="bottom">{{searchlist.village_name}} {{searchlist.door_number}}</text>
+          </view>
+        </view>
+        <view class="f_btn">
+          <view class="over" wx:if="{{searchlist.signCount > 0}}">已提交订金单</view>
+          <view class="btn" data-id="{{searchlist.id}}" wx:else bindtap="SearchSubscription">交订金</view>
+        </view>
+      </view>
+    </view>
+
+    <view class="title">{{title}}</view>
+    <scroll-view style="{{'height:'+(height-130)+'px'}}" bindscrolltolower="loadMore" scroll-y>
+      <view class="list"  wx:for="{{list}}" wx:key="index" index="index" item="item">
+        <view class="iconImage">
+          <image src="{{item.icon}}" class="icon"/>
+        </view>
+        <view class="right">
+          <view class="rightItem">
+            <text class="name">{{item.link_name}}</text>
+          </view>
+          <view class="rightItem">
+            <text class="bottom">{{item.village_name}} {{item.door_number}}</text>
+          </view>
+        </view>
+        <!--<view class="over" wx:if="{{item.signCount > 0}}">已提交订金单</view>-->
+        <!--<view class="buttonSlef" wx:else bindtap="giveSubscription('{{item.user_id}}')">交订金</view>-->
+        <view class="time">
+          <text class="t-status">{{item.status}}</text>
+          <text class="t-time">{{item.create_at}}</text>
+        </view>
+      </view>
+    </scroll-view>
+  </view>

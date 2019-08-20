@@ -1,0 +1,156 @@
+<style lang="less">
+  .remarkcon{
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgba(1,1,1,0.5);
+    .con{
+      background-color: #ffffff;
+      width: 100%;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      padding-bottom: 32px;
+      .con-line{
+        display: flex;
+        justify-content: flex-start;
+        .btn{
+          width: 64px;
+          height: 27px;
+          text-align: center;
+          line-height: 27px;
+          background-color: #ACACAC;
+          color: #ffffff;
+          font-size: 14px;
+          margin-left: 15px;
+          border-radius: 4px;
+          margin-top: 21px;
+          margin-bottom: 20px;
+        }
+      }
+      .con-content{
+        height: 117px;
+        padding-left: 15px;
+        padding-right: 15px;
+      }
+      .fbtn{
+        margin-left: 15px;
+        margin-right: 15px;
+        background-color: #FF5D22;
+        color: #ffffff;
+        font-size: 14px;
+        text-align: center;
+        padding: 13px 0;
+        -webkit-border-radius: 4px;
+        -moz-border-radius: 4px;
+        border-radius: 4px;
+      }
+    }
+  }
+  .show{
+    animation: all .3s linear;
+  }
+  .right{
+    color: #EB5F33 !important;
+    background-color: #FCECE7 !important;
+    border: 1rpx solid #F39C81;
+  }
+</style>
+<template>
+    <view class="remarkcon" cantouchmove="true" style="{{'height:'+height+'px'}}" @tap.stop="hideModal">
+        <view class="con" @tap.stop="true">
+            <view class="con-line">
+                <view class="btn {{return_visit === 1?'right':''}}" id="right" @tap="choose">去</view>
+                <view class="btn {{return_visit === 2?'right':''}}" id="no"  @tap="choose">不去</view>
+            </view>
+            <view class="con-content">
+              <textarea bindinput="getData" value=''></textarea>
+            </view>
+            <view class="fbtn" @tap="subData">确认</view>
+        </view>
+    </view>
+</template>
+<script>
+  import wepy from 'wepy'
+  import toastMixin from '../mixins/toast'
+  import api from '../mixins/api'
+  import util from '../mixins/util'
+
+  export default class remark extends wepy.component {
+    props = {
+      dataItem: {
+        type: Object,
+        value: {}
+      },
+      dataList: {
+        type: Array,
+        value: []
+      }
+    }
+
+    data = {
+      height: 0,
+      textArea: '',
+      return_visit: 1,
+      showBG: true
+    }
+
+    mixins = [api, toastMixin, util]
+
+    methods = {
+      // 文本填写
+      getData(e) {
+        let val = e.detail.value
+        this.textArea = val
+        this.$apply()
+      },
+
+      // 选择
+      choose(e) {
+        console.log(e)
+        let id = e.currentTarget.id
+        let index = 1
+        if (id === 'right') {
+          index = 1
+        } else {
+          index = 2
+        }
+        this.return_visit = index
+        this.$apply()
+      },
+
+      hideModal() {
+        this.$emit('changeState')
+      },
+
+      // 提交数据
+      subData() {
+        let dataItem = this.dataList[this.dataItem]
+        console.log('item', dataItem)
+        let data = {
+          mobile: dataItem.mobile,
+          base_id: dataItem.base_id,
+          riding_id: dataItem.riding_id,
+          remark: this.textArea,
+          return_visit: this.return_visit
+        }
+        this.setReVisitData(data).then(res => {
+          console.log('setReVisitData', res)
+          if (res.data.resultCode === 1000) {
+            wx.showToast({
+              title: '备注成功'
+            })
+            this.$emit('modifyState',this.textArea,this.return_visit)
+          }
+        })
+      }
+    }
+
+    onLoad() {
+      let h = wx.getSystemInfoSync().windowHeight
+      this.height = h
+      this.$apply()
+    }
+  }
+</script>

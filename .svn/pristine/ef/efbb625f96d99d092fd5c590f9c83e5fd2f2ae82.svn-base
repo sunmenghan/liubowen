@@ -1,0 +1,73 @@
+
+  <view class="container">
+    <!-- <view class="lineBackground"></view> -->
+    <view class="head">
+      <view class="h_avar">
+        <image class="h_img" src="{{options.icon?options.icon:'../assets/images/touxiang.png'}}"/>
+        <text>{{options.name}}</text>
+      </view>
+      <image class="close" src="../assets/images/closebtn.png" bindtap="logout"/>
+    </view>
+    <!-- main -->
+    <view class="main">
+
+      <view class="menu" bindtap="sub">
+        <image src="../assets/images/Group.png"/>
+        <text>收订金</text>
+      </view>
+
+      <view class="menu" id="menu" bindtap="queryOrder">
+        <image src="../assets/images/icon_cwjs@2x.png"/>
+        <text>参团提醒</text>
+      </view>
+
+      <view class="menu">
+        <image src="../assets/images/icon_sjtj@2x.png"/>
+        <text>数据统计</text>
+        <view class="expect">敬请期待</view>
+      </view>
+
+      <view class="menu">
+        <image src="../assets/images/icon_ddgl@2x.png"/>
+        <text>认证审核</text>
+        <view class="expect">敬请期待</view>
+      </view>
+    </view>
+
+    <view class="group-buying" bindtap="groupBuy">
+      <text class="left">集采安排\t</text>
+      <view class="date">{{list[0].beg_at}}<text>\t</text>{{list[0].project_name}}</view>
+    </view>
+
+    <view class="querySign" bindtap="querySign">
+      <icon type="success" size="20" color="#FF5D22"/>
+      <view>
+        <text>用户查询</text>
+        <text class="rightTap">></text>
+      </view>
+    </view>
+
+    <view class="querySign" id="project" bindtap="queryOrder">
+      <icon type="success" size="20" color="#FF5D22"/>
+      <view>
+        <text>参团确认</text>
+        <text class="rightTap">></text>
+      </view>
+    </view>
+
+    <!--<view class="querySign" bindtap="userAdmin">-->
+      <!--<icon type="success" size="20" color="#FF5D22"/>-->
+      <!--<view>-->
+        <!--<text>用户管理</text>-->
+        <!--<text class="rightTap">></text>-->
+      <!--</view>-->
+    <!--</view>-->
+
+    <!--<view class="querySign" bindtap="checkRoomAdmin">-->
+      <!--<icon type="success" size="20" color="#FF5D22"/>-->
+      <!--<view>-->
+        <!--<text>验房管理</text>-->
+        <!--<text class="rightTap">></text>-->
+      <!--</view>-->
+    <!--</view>-->
+  </view>

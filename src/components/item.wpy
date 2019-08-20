@@ -1,0 +1,255 @@
+<style type="less">
+  .gray{
+    border: 1px solid #9B9B9B !important;
+    color: #9B9B9B !important;
+    background-color: #ffffff !important;
+  }
+  .item {
+    .h_item{
+      display: flex;
+      align-items: center;
+      padding: 32rpx 0;
+      background-color:#fff;
+      border-top:1rpx solid rgba(180,180,180,0.2);
+      .h_avar{
+        width: 70rpx;
+        height: 70rpx;
+        border: 1px solid;
+        border-radius: 40rpx;
+        margin-left: 28rpx;
+      }
+      .c_context{
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        padding-left: 30rpx;
+        flex-wrap: nowrap;
+        flex:4;
+        .c_name{
+          color: #666666;
+          font-size: 28rpx;
+          padding-bottom: 7rpx;
+        }
+        .c_text{
+          color: #999999;
+          font-size: 24rpx;
+          padding-top: 7rpx;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          width: 210rpx;
+        }
+      }
+      .c_btn{
+        display: flex;
+        font-size: 26rpx;
+        color: #E94816;
+        margin-left: 114rpx;
+        .btn{
+          width: 100rpx;
+          height: 50rpx;
+          text-align: center;
+          border: 1px solid #E94816;
+          background-color: rgba(233,72,22,0.2);
+          line-height: 50rpx;
+          margin-left: 16rpx;
+          -webkit-border-radius: 8rpx;
+          -moz-border-radius: 8rpx;
+          border-radius: 8rpx;
+        }
+      }
+      .c_success{
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        justify-content: flex-end;
+        margin-left: 130rpx;
+        flex:4;
+        padding-right:20rpx;
+        .sign{
+          color: #E94816;
+          font-size: 26rpx;
+        }
+        .time{
+          color: #999999;
+          font-size: 24rpx;
+        }
+      }
+    }
+  }
+  .fmodal{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0,0,0,0.1);
+    .f_content{
+      background-color: #ffffff;
+      width: 80%;
+      height: 400rpx;
+      border-radius: 10rpx;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      .title{
+        font-size: 34rpx;
+        font-weight: 600;
+        color: #000;
+        text-align: center;
+        padding-top: 20rpx;
+      }
+      .remark{
+        flex: 4;
+        padding-top: 10rpx;
+        width: 90%;
+        margin: 0 auto;
+      }
+      .fbtn{
+        flex: 2;
+        display: flex;
+        border-top: 1rpx solid rgba(180,180,180,0.2);
+        align-items: center;
+        .f_cancel{
+          flex: 1;
+          text-align: center;
+        }
+        .f_confirm{
+          flex: 1;
+          text-align: center;
+          border-left: 1rpx solid rgba(180,180,180,0.2);
+          color: #E94816;
+        }
+      }
+    }
+  }
+</style>
+<template>
+  <view class="item">
+    <view class="h_item">
+      <image class="h_avar" src="{{listData.icon}}"></image>
+      <view class="c_context">
+        <text class="c_name">{{listData.user_name}}</text>
+        <text class="c_text">{{listData.project_name}}</text>
+      </view>
+      <view class="c_success" wx:if="{{listData.id}}">
+        <text class="sign">签到成功</text>
+        <text class="time">{{listData.create_at}}</text>
+      </view>
+      <view wx:else>
+        <view class="c_btn" wx:if="{{listData.return_visit == 0}}">
+            <view class="btn" catchtap="reVisit">回访</view>
+            <view class="btn" data-phone="{{listData.mobile}}" catchtap="reMark">备注</view>
+        </view>
+        <view class="c_btn" wx:else>
+          <view class="btn gray" catchtap="reVisit">回访</view>
+          <view class="btn gray" catchtap="reMark">备注</view>
+        </view>
+      </view>
+    </view>
+   <view class="fmodal" catchtouchmove="true" hidden="{{!showRemark}}" style="{{'height:'+height+'px'}}">
+     <view class="f_content">
+       <view class="title">备注</view>
+       <input class="remark" focus="{{true}}"  type="text" bindinput="getData" />
+       <view class="fbtn">
+         <view class="f_cancel" catchtap="modalCancel">取消</view>
+         <view class="f_confirm" @tap="modalConfirm">确定</view>
+       </view>
+     </view>
+   </view>
+  </view>
+</template>
+<script>
+  import wepy from 'wepy'
+  import toastMixin from '../mixins/toast'
+  import api from '../mixins/api'
+  import util from '../mixins/util'
+  export default class item extends wepy.component {
+    props = {
+      listData: {
+        type: Object,
+        value: {}
+      },
+      options: {
+        type: Object,
+        value: {}
+      }
+    }
+
+    mixins = [api, toastMixin, util]
+
+    data = {
+      showRemark: false,
+      remarkData: '',
+      phone: 0,
+      height: wx.getSystemInfoSync().windowHeight,
+      index: ''
+    }
+
+    methods = {
+      reVisit() {
+        let mobile = this.listData.mobile
+        wx.makePhoneCall({
+          phoneNumber: mobile // 仅为示例，并非真实的电话号码
+        })
+      },
+      reMark(e) {
+        console.log(e)
+        if (this.listData.return_visit > 0) {
+          let remark = this.listData.remark
+          wx.showModal({
+            title: '备注',
+            content: remark,
+            showCancel: false,
+            success(res) {
+              if (res.confirm) {
+                console.log('用户点击确定')
+              }
+            }
+          })
+        } else {
+          this.index = e.currentTarget.dataset.comIndex
+          this.showRemark = true
+          this.phone = e.currentTarget.dataset.phone
+          this.$apply()
+        }
+      },
+      modalConfirm(e) {
+        console.log('that', this.$data.listData)
+        let that = this
+        let rdata = this.remarkData
+        let options = this.options
+        let data = {
+          mobile: this.phone,
+          base_id: options.base_id,
+          riding_id: options.riding_id,
+          remark: rdata
+        }
+        this.setRemarkData(data).then(res => {
+          if (res.data.resultCode === 1000) {
+            that.selfToast('添加备注成功')
+            that.showRemark = false
+            that.$emit('changeState', {index: that.index, remark: rdata})
+            that.$apply()
+          }
+        })
+      },
+      modalCancel() {
+        this.showRemark = false
+        this.remarkData = ''
+        this.$apply()
+      },
+      getData(e) {
+        let data = e.detail.value
+        this.remarkData = data
+      }
+    }
+
+    onLoad() {
+      console.log('props', this.listData)
+    }
+  }
+</script>

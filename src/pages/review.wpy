@@ -1,0 +1,603 @@
+<style lang="less">
+  page {
+    background: #f7f7f7;
+  }
+  .line{
+    border-bottom: 1rpx solid rgba(180,180,180,0.2);
+  }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    background-color: #fff;
+    padding: 40rpx;
+    z-index: 99;
+    position:fixed;
+    top:92rpx;
+    width:100%;
+    box-sizing:border-box;
+    >.project {
+      color: #000000;
+      font-weight: 500;
+      font-size: 18px;
+    }
+    > .filter {
+      display: flex;
+      align-items: center;
+      >image{
+        width:14px;
+        height:15px;
+        margin-right: 2px;
+      }
+      >text{
+        color: #666666;
+        font-size: 14px;
+      }
+    }
+  }
+  .con{
+    padding-bottom: 20rpx;
+    .con-item{
+    position:relative;
+      margin-top: 20rpx;
+      display: flex;
+      justify-content: flex-start;
+      position: relative;
+      background-color: #ffffff;
+      padding-top: 15px;
+      padding-bottom: 5px;
+      .con-avar{
+        flex: 1;
+        text-align: center;
+        image{
+          width: 35px;
+          height: 35px;
+        }
+      }
+      .con-content{
+        flex: 4;
+        display: flex;
+        flex-direction: column;
+        .name{
+          color: #666666;
+          font-size: 14px;
+          padding-bottom: 13rpx;
+        }
+        .to-method{
+          color: #999999;
+          font-size: 12px;
+          padding-bottom: 8rpx;
+        }
+        .remark{
+          color: #ED6B42;
+          font-size: 14px;
+          height:30px ;
+          display: flex;
+          margin-top: 19rpx;
+          .rtxt{
+            flex: 4;
+            display:flex;
+            align-items:center;
+          }
+          .rbtn{
+            flex: 1.2;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+           view{
+             background-color: rgba(233,72,22,0.1);
+             color: #E94816;
+             border: 1rpx solid rgba(233,72,22,0.5);
+             height: 25px;
+             width: 44px;
+             text-align: center;
+             line-height: 25px;
+             font-size: 13px;
+             -webkit-border-radius: 4px;
+             -moz-border-radius: 4px;
+             border-radius: 4px;
+           }
+          }
+        }
+      }
+      .label{
+        position: absolute;
+        right: 0;
+        top: 0;
+      }
+    }
+    .bottomline{
+      background-color: #f7f7f7;
+      color: #666666;
+      width: 100%;
+      height: 40rpx;
+      text-align: center;
+      line-height: 40rpx;
+      font-size: 14px;
+      padding-top:10rpx;
+      padding-bottom:10rpx;
+    }
+  }
+  .prohibit{
+    color: #666666 !important;
+    border: 1rpx solid #999999 !important;
+    background-color: #f7f7f7 !important;
+  }
+  .modal{
+    background-color: #f7f7f7 !important;
+    z-index:9999;
+    position:relative;
+  }
+  .noData{
+    text-align: center;
+    margin-top: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    image{
+      width: 60px;
+      height: 60px;
+    }
+  }
+  .downImg{
+     width:20rpx;
+     height:16rpx;
+  }
+  .showBox{
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.5);
+    position:absolute;
+    top:0;
+    left:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    image{
+      width:86rpx;
+      height:64rpx;
+    }
+  }
+  .listTop{
+    font-size:14px;
+    text-align:center;
+    padding:30rpx 0;
+    position:relative;
+    z-index:999;
+    background:#FFF;
+    position:fixed;
+    top:0;
+    width:100%;
+  }
+  .listTop text{
+    color:#D96347;
+  }
+</style>
+
+<template>
+  <view class="main">
+
+
+      <view wx:if='{{option.name}}' class='listTop'>
+          已签到<text>{{signCount}}</text>户，还有<text>{{leftSignCount}}</text>户需要提醒业主参团
+      </view>
+      <view class='listTop' wx:else>已有<text>{{enrollCount}}</text>人报名，已回访<text>{{returnCount}}</text>户，坐大巴<text>{{ridingCount}}</text>人</view>
+
+    <view class="header {{showMask?'modal':''}}" catchtouchmove="true">
+<!--参团确认-->
+          <picker wx:if='{{type==0}}'  mode="selector" bindchange="bindAgentPickerChange"  range-key="{{'name'}}"  value="{{pickerActive[hx_index].id}}" range="{{pickerActive}}" data-id="{{pickerActive[hx_index].id}}" >
+               <view class="project">{{pickerActiveName}} <image src='../assets/images/downImg.png' class="downImg"/> </view>
+          </picker>
+<!--报名回访-->
+        <view wx:elif='{{type!=0}}'  class="project" >
+            <block wx:for='{{pickerActive}}' wx:key='key'>
+               <text wx:if='{{item.id==option.base_id}}'> {{item.name}}</text>
+            </block>
+        </view>
+
+
+        <view class="filter" @tap="showFilter">
+          <image src="../assets/images/icon_sx@2x.png"></image>
+          <text>筛选</text>
+        </view>
+    </view>
+
+
+    <scroll-view
+          scroll-y
+          style="height:{{height-80}}px;margin-top:233rpx;"
+          bindscrolltolower="onReachBottom"
+          lower-threshold=0
+          class="con">
+        <block wx:for="{{listData}}" wx:key  index="index">
+          <view class="con-item" >
+
+<!--显示签到遮罩-->
+ <view class='showBox' wx:if='{{item.id && option.name}}'>
+    <image src='../assets/images/cheackpng'></image>
+ </view>
+
+              <view class="con-avar" data-tell='{{item.mobile}}' catchtap="call_mobile">
+                <image src="{{item.icon}}"></image>
+              </view>
+              <view class="con-content">
+                <text class="name" data-tell='{{item.mobile}}' catchtap="call_mobile">{{item.user_name}} {{item.mobile}}</text>
+                <text class="to-method">前往方式: {{item.ridingName}}</text>
+                <text class="to-method line">报名项目: {{item.project_name}}</text>
+                <view class="remark">
+                  <view class="rtxt">
+                    <text wx:if="{{item.return_visit}}">备注:{{item.return_visit == 1?'【去 '+item.riding_count+'个人】': item.return_visit == 2?'【不去】':''}} {{item.remark}}</text>
+                  </view>
+
+                  <view class="rbtn">
+                    <view hidden="{{!item.return_visit}}" class="prohibit"  data-index="{{index}}" @tap="remarkData">已回访</view>
+                    <view hidden="{{item.return_visit || remarkOver===index}}" data-index="{{index}}" @tap="remarkData">备注</view>
+                  </view>
+                </view>
+              </view>
+              <view class="label"></view>
+          </view>
+
+        </block>
+        <view wx:if="{{isOver && listData.length>0}}" class="bottomline">—没有更多了—</view>
+        <view class="noData" wx:if="{{listData.length === 0}}">
+          <image src="../assets/images/no-data.png"></image>
+          <text>没有数据了</text>
+        </view>
+    </scroll-view>
+
+    <!-- <view wepy:else class="list">
+      <view class="iconImage">
+        暂无签到
+      </view>
+    </view> -->
+    <remark wx:if="{{showBg}}"
+            :dataList.sync="listData"
+            :dataItem.sync="checkIndex"
+            :dataJoin.sync="option"
+            :changeBugNum.sync='chridernBugNum'
+            :changeVisit.sync='chridernVisit'
+
+            @modifyState.user="modifyState"
+            @changeState.user="changeState"></remark>
+    <menu wx:if="{{showMask}}"
+          :isFilter.sync="showMask"
+          @hideModel.user = 'hideModel'
+          @changeData.user="changeData"></menu>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import toastMixin from '../mixins/toast'
+  import api from '../mixins/api'
+  import util from '../mixins/util'
+  import remark from '../components/remark'
+  import menu from '../components/menu'
+
+  export default class SubList extends wepy.page {
+    config = {
+      navigationBarTitleText: '未签到回访',
+      navigationBarBackgroundColor: '#FF5D22',
+      navigationBarTextStyle: 'white'
+    }
+
+    mixins = [api, toastMixin, util]
+
+    components = {
+      remark: remark,
+      menu: menu
+    }
+
+    data = {
+      listData: [],
+      page: 1,
+      base_id:'',
+      pickerActiveName:'',
+      isOver: false,
+      showBg: false,
+      option: '',
+      height: 0,
+      showMask: false,
+      checkIndex: '',
+      remarkOver: '',
+      address: [],
+      isFilter: false,
+      preview: '',
+      pickerActive:[],//采集活动期数
+      hx_index:0,
+      type:'',
+      chridernVisit:'',// 子组件去还是不去
+      enrollCount:'',//报名人数
+      returnCount:'',//回访人数
+      ridingCount:'',//大巴人数
+      chridernBugNum:'',//子组件需要的大巴人数
+      leftSignCount:'',//需要提醒
+      signCount:''//签到
+    }
+
+    onLoad(options) {
+    var that = this;
+    this.options = options;
+
+
+      console.log('op', options)
+      let type = options.type
+      this.option = options
+      this.type = options.type
+      this.isOver = false
+      this.$apply()
+    //渲染采集活动期数
+           let token = wepy.getStorageSync('token')
+           let tokenid = wepy.getStorageSync('tokenid')
+
+           var baseinfoData={
+            token:token,
+            tokenid:tokenid
+           }
+
+          this.getBaseinfo(baseinfoData).then(res=>{
+              this.pickerActive = res.data.data;
+              this.pickerActiveName = res.data.data[0].name
+              this.$apply();
+               let h = wx.getSystemInfoSync().windowHeight
+               let data = {}
+              if (type==0) {
+              this.base_id = this.pickerActive[0].id
+              this.$apply()
+
+                let user = wepy.getStorageSync('user')
+                data = {
+                  group_id: user.id,
+                  base_id: this.pickerActive[0].id,
+                  page: 1,
+                  pagesize: 10
+                }
+                wx.setNavigationBarTitle({
+                  title: '参团确认'
+                })
+              } else {
+                data = {
+                  base_id:options.base_id,
+                  page: 1,
+                  return_visit: 1,
+                  pagesize: 10
+                }
+                wx.setNavigationBarTitle({
+                  title: '参团提醒'
+                })
+              }
+              this.getEnrollData(data).then(res => {
+                this.listData = res.data.data.list
+                this.address = res.data.dataReserve2
+                this.height = h - 55
+                this.$broadcast('getData', res.data.dataReserve2,options)
+
+
+
+                this.enrollCount = res.data.data.enrollCount
+                this.returnCount   = res.data.data.returnCount
+                this.ridingCount = res.data.data.ridingCount
+                this.signCount = res.data.data.signCount
+                this.leftSignCount = res.data.data.leftSignCount
+                this.$apply()
+              })
+
+          })
+
+    }
+
+    onShow() {
+      let op = this.option
+      this.option = op
+      this.showMask = false
+      this.isOver = false
+      this.page = 1
+      this.$apply()
+    }
+
+    methods = {
+//拨打电话
+call_mobile:function(e){
+   wx.makePhoneCall({
+     phoneNumber: e.currentTarget.dataset.tell
+   })
+},
+//选择采集活动期数
+      bindAgentPickerChange:function(e){
+          this.hx_index= e.detail.value;
+          this.isOver = false
+          this.page=1
+          let id = this.pickerActive[this.hx_index].id;
+          let names = this.pickerActive[this.hx_index].name;
+          this.base_id = id
+          this.pickerActiveName = names
+          this.$apply()
+
+          let h = wx.getSystemInfoSync().windowHeight
+                let data = {}
+                if (this.type) {
+                  let user = wepy.getStorageSync('user')
+                  data = {
+                    group_id: user.id,
+                    base_id:id,
+                    page: 1,
+                    pagesize: 10
+                  }
+                } else {
+                  data = {
+                    base_id: id,
+                    page: 1,
+                    return_visit: 1,
+                    pagesize: 10
+                  }
+                }
+          var options  = this.option;
+          options.base_id = id
+          this.getEnrollData(data).then(res => {
+            this.listData = res.data.data.list
+            this.address = res.data.dataReserve2
+            this.height = h - 55
+            this.$broadcast('getData', res.data.dataReserve2,options)
+            this.$apply()
+          })
+      },
+
+      changeState() {
+        this.showBg = false
+        this.$apply()
+      },
+
+
+    hideModel(e){
+       this.showMask = e
+    },
+
+      modifyState(e,ev,busNum) {
+        var that = this;
+        that.onLoad(that.options)   //onLoad刷新页面
+        let listData = this.listData
+        listData[this.checkIndex].remark = e  // 备注内容
+
+        listData[this.checkIndex].return_visit = ev  //1:去；2不去
+
+        listData[this.checkIndex].riding_count = busNum  //大巴人数
+
+        this.showBg = false
+        this.remarkOver = this.checkIndex
+        this.listData = listData
+        this.$apply()
+      },
+
+      changeData(data) {
+        this.listData = data
+        this.showMask = false
+        this.$apply()
+      }
+    }
+
+    showFilter() {
+      let mask = this.data.showMask
+      this.showMask = !mask
+      this.isOver = false
+      this.page =1
+      this.$apply()
+    }
+
+
+
+    remarkData(e) {
+      var that = this;
+      let index = e.currentTarget.dataset.index
+      this.checkIndex = index
+
+      this.chridernBugNum = this.listData[index].riding_count;
+      this.chridernVisit = this.listData[index].return_visit
+
+//如果是备注，那就默认为去，大巴人数为1
+if(!this.listData[index].return_visit){
+  this.chridernVisit=1
+  this.chridernBugNum=1
+}
+      this.page =1
+      this.showBg = true
+      this.$apply()
+
+    }
+
+    test(obj, target) {
+      let o = true
+      let t = true
+      if (obj.addr) o = (obj.addr === target.addr)
+      if (obj.return_visit) t = (obj.return_visit === target.return_visit)
+
+      return o === t
+    }
+
+    // 上拉加载更多
+    onReachBottom() {
+      let filter = this.listData[0].isFilter
+      let options = this.option
+      let type = options.type
+      let page =  this.page +1
+      this.page = page
+
+     this.$apply()
+
+      let data = {}
+      if (type==0) {
+        let user = wepy.getStorageSync('user')
+        data = {
+          base_id:this.base_id,
+          group_id: user.id,
+          page: page,
+          pagesize: 6
+        }
+      } else {
+        data = {
+          base_id: this.option.base_id,
+          page: page,
+          return_visit: 1,
+          pagesize: 6
+        }
+      }
+      if (filter) {
+        let temp = this.listData[0].filter
+        let pre = this.preview
+
+        console.log(pre,"prepre")
+        if (pre) {
+          let state = this.test(pre, temp)
+          if (state) {
+            pre.page = page
+            this.preview = pre
+            data = pre
+            console.log(data,"122")
+          } else {
+            console.log("1111")
+            temp.page += 1
+            this.preview = temp
+            data = temp
+          }
+        } else {
+          temp.page += 1
+          this.preview = temp
+          data = temp
+        }
+        this.$apply()
+
+      }
+      if (!this.isOver) {
+        this.getEnrollData(data).then(res => {
+
+      Array.prototype.push.apply(this.listData,res.data.data.list)
+          this.listData = this.listData;
+          this.$apply()
+          if(res.data.data.list.length==0){
+            this.isOver = true
+            this.$apply()
+          }
+       /**
+            let list = this.listData
+            let listData = res.data.data.list
+
+
+            if (listData.length == 0) {
+              this.isOver = true
+              this.$apply()
+            }
+            list = list.concat(listData)
+            this.listData = list
+            this.page = page
+            this.$apply()
+       **/
+
+
+        })
+      } else {
+        this.selfToast('暂无更多数据', 'none')
+      }
+    }
+  }
+</script>

@@ -1,0 +1,6 @@
+
+  <view class="main _32a6cbf">
+    <icon type="warn" size="40" class="_32a6cbf"/>
+    <text class="_32a6cbf">{{error}}</text>
+    <button bindtap="tryAgain" plain size="mini" class="_32a6cbf">重试</button>
+  </view>

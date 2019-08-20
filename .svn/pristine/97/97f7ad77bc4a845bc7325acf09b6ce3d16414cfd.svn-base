@@ -1,0 +1,136 @@
+<style lang="less">
+  page {
+    background: #f7f7f7;
+  }
+  .signMain {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    >.group {
+      flex: 1;
+      width: 100%;
+      text-align: center;
+      background-color: #fff;
+      padding-top: 96rpx;
+      .yes {
+        width: 90rpx;
+        height: 90rpx;
+        margin-bottom: 30rpx;
+      }
+      text {
+        font-size:15px;
+        font-weight:400;
+        color:#666;
+        line-height:30rpx;
+      }
+      .buttonGroup {
+        display: flex;
+        justify-content: space-around;
+        padding: 100rpx; 
+        .mainColor {
+          background-color: #FF5D22;
+          color: #fff;
+        }
+      }
+    }
+    >.userInfo {
+      flex: 1;
+      width: 100%;
+      text-align: center;
+      background-color: #fff;
+      padding-top: 96rpx;
+      margin-top: 20rpx;
+      font-size:15px;
+      font-weight:400;
+      color:#666;
+      >.imgView {
+        image {
+          width: 128rpx;
+          height: 128rpx;
+          border-radius: 50%;
+        }
+      }
+      .text {
+        display: inline-block;
+        margin: 20rpx 0;
+      }
+      view {
+        padding-top: 10rpx;
+      }
+    }
+  }
+</style>
+
+<template>
+  <view class="signMain">
+    <!-- 功能块 -->
+    <view class="group">
+      <view>
+        <image class="yes" src="../assets/images/icon_yycg.png" />
+      </view>
+      <text>签到成功</text>
+      <view class="buttonGroup">
+        <button size="mini" plain @tap="lookView">查看详情</button>
+        <button size="mini" class="mainColor" @tap="code">继续签到</button>
+      </view>
+    </view>
+
+    <view class="userInfo">
+      <view class="imgView">
+        <image class="yes" src="{{icon}}" />
+      </view>
+      <text class="text">{{user_name}}</text>
+      <view>{{village_name}} {{door_number}}</view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import toastMixin from '../mixins/toast'
+  import api from '../mixins/api'
+  import util from '../mixins/util'
+
+  export default class SignOk extends wepy.page {
+    config = {
+      navigationBarTitleText: '签到成功',
+      navigationBarBackgroundColor: '#FF5D22',
+      navigationBarTextStyle: 'white'
+    }
+
+    mixins = [api, util, toastMixin]
+    data = {
+      user_name: '',
+      icon: '',
+      door_number: '',
+      village_name: ''
+    }
+
+    methods = {
+      // 继续签到
+      code () {
+        this.$wxapp.type = true
+        wepy.navigateBack({
+          delta: 1
+        })
+      },
+
+      // 查看详情
+      lookView () {
+        this.$redirect('./signInList')
+      }
+    }
+
+    onLoad(option) {
+      console.log(option)
+      let that = this
+      that.user_name = option.user_name
+      that.icon = option.icon
+      that.door_number = option.door_number
+      that.village_name = option.village_name
+      that.$apply()
+    }
+  }
+</script>

@@ -1,0 +1,202 @@
+<style lang="less">
+  page {
+    background: #f7f7f7;
+  }
+
+  .header {
+    background-color: #fff;
+    padding: 40rpx 0rpx 40rpx 40rpx;
+    margin-bottom: 20rpx;
+    >.project {
+      color: #333;
+      font-weight: 500;
+      font-size: 18px;
+      line-height: 50rpx;
+    }
+    > .total {
+      color: #333;
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 34rpx;
+    }
+  }
+
+  .list {
+    padding: 32rpx 28rpx;
+    padding-bottom: 0;
+    background-color: #fff;
+    display: flex;
+    align-content: center;
+    >.iconImage {
+      flex: 1;
+      padding-bottom: 30rpx;
+      border-bottom: 1px solid #eee;
+      >.icon {
+        width: 70rpx;
+        height: 70rpx;
+        border-radius: 50%;
+      }
+    }
+    .right {
+      flex: 9;
+      padding-bottom: 30rpx;
+      border-bottom: 1px solid #eee;
+      >.rightItem {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        >.name {
+          font-size: 14px;
+          color: #666;
+          font-weight: 400;
+          padding-left: 30rpx;
+        }
+        >.orange {
+          color: #ff5d22;
+          font-size: 13px;
+          font-weight: 400;
+        }
+        >.bottom {
+          color: #999;
+          font-size: 12px;
+          padding-left: 30rpx;
+        }
+      }
+    }
+  }
+</style>
+
+<template>
+  <view class="main">
+    <view class="header">
+      <text class="project">{{options.name || '暂无签到记录'}}</text>
+      <text class="total" wx:if="{{list.length}}">（共 {{num}} 户签到）</text>
+    </view>
+    <scroll-view
+      scroll-y
+      bindscrolltolower="onReachBottom"
+      style="{{'height:'+(height-50)+'px'}}">
+      <repeat for="{{list}}" index="index" item="item">
+          <item :options="options" :listData.sync="item"></item>
+      </repeat>
+    </scroll-view>
+    <!-- <view wepy:else class="list">
+      <view class="iconImage">
+        暂无签到
+      </view>
+    </view> -->
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import toastMixin from '../mixins/toast'
+  import api from '../mixins/api'
+  import util from '../mixins/util'
+  import item from '../components/item'
+
+  export default class SignInList extends wepy.page {
+    config = {
+      navigationBarTitleText: '签到记录',
+      navigationBarBackgroundColor: '#FF5D22',
+      navigationBarTextStyle: 'white'
+    }
+
+    mixins = [api, toastMixin, util]
+
+    components = {
+      item: item
+    }
+
+    onLoad(options) {
+      // let projectId = wepy.getStorageSync('sign_project_id')
+      let h = wx.getSystemInfoSync().windowHeight
+      let data = {
+        page: 1,
+        pagesize: 10,
+        base_id: options.base_id,
+        riding_id: options.riding_id
+      }
+      this.getSignList(data).then(res => {
+        console.log('list', res.data.data)
+        if (res.data.data) {
+          let data = res.data.data
+          this.list = this.reSort(data)
+          this.num = res.data.dataReserve1
+          this.records = res.data.records
+          this.total = res.data.total
+          this.options = options
+          this.height = h
+          this.$apply()
+        } else {
+          this.selfToast('暂无数据,请重试', 'none', 2000)
+          this.hideToast()
+          this.height = h
+          this.$apply()
+        }
+      })
+    }
+
+    data = {
+      list: [],
+      page: 1,
+      records: '',
+      total: '',
+      options: {},
+      num: 0,
+      height: '',
+      canLoad: true
+    }
+
+    methods = {
+
+    }
+
+    events = {
+      changeState(data) {
+        this.list[data.index].return_visit = 1
+        this.list[data.index].remark = data.remark
+        this.list = this.reSort(this.list)
+      }
+    }
+
+    // 上拉加载更多
+    onReachBottom() {
+      console.log(22)
+      let that = this
+      that.showToast()
+      let options = this.options
+      let page = that.page + 1
+      console.log('page', that.page)
+      let para = {
+        page: page,
+        pagesize: 10,
+        base_id: options.base_id,
+        riding_id: options.riding_id
+      }
+      if (that.canLoad) {
+        that.getSignList(para).then(res => {
+          console.log(res)
+          // 如果有数据
+          let data = res.data.data
+          if (data.length > 0) {
+            let l = that.list
+            l = l.concat(data)
+            console.log('l',l);
+            this.list = this.reSort(l)
+            that.page = page
+            that.$apply()
+            that.hideToast()
+          } else {
+            that.canLoad = false
+            that.$apply()
+            this.selfToast('没有数据了', 'none', 2000)
+          }
+        })
+      } else {
+        this.selfToast('没有数据了', 'none', 2000)
+      }
+    }
+  }
+</script>

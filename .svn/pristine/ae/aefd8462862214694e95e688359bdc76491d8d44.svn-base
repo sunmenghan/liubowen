@@ -1,0 +1,148 @@
+page {
+  background-color: #f7f7f7;
+}
+.lineBackground {
+  background: linear-gradient(180deg, #ff5d22 0%, #ffac22 100%);
+  height: 40rpx;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  z-index: 999;
+}
+.container {
+  height: 100%;
+}
+.container .head {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 120rpx;
+  justify-content: space-between;
+  background: linear-gradient(180deg, #ff5d22 0%, #ffac22 100%);
+}
+.container .head .h_avar {
+  color: #ffffff;
+  font-size: 28rpx;
+  display: flex;
+  align-items: center;
+  padding-left: 40rpx;
+}
+.container .head .h_avar .h_img {
+  width: 48rpx;
+  height: 48rpx;
+  margin-right: 10rpx;
+  border-radius: 30rpx;
+}
+.container .head .close {
+  width: 44rpx;
+  height: 44rpx;
+  padding-right: 40rpx;
+}
+.userinfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.userinfo-avatar {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+}
+.userinfo-nickname {
+  color: #aaa;
+}
+.main {
+  height: 280rpx;
+  width: 100%;
+  background-color: #fff;
+  color: #f7f7f7;
+  display: flex;
+  align-items: center;
+}
+.main > .menu {
+  width: 33%;
+  text-align: center;
+  position: relative;
+}
+.main > .menu > image {
+  width: 64rpx;
+  height: 72rpx;
+}
+.main > .menu > text {
+  display: block;
+  height: 28rpx;
+  font-size: 13px;
+  font-family: PingFangSC-Regular;
+  font-weight: 400;
+  color: #333333;
+  line-height: 28px;
+}
+.main > .menu > .expect {
+  position: absolute;
+  width: 94%;
+  height: 180rpx;
+  left: 0rpx;
+  top: -18rpx;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 172rpx;
+  text-align: center;
+  line-height: 180rpx;
+  font-size: 13px;
+}
+.group-buying {
+  width: 100%;
+  margin: 20rpx 0;
+  padding: 40rpx;
+  background-color: #fff;
+}
+.group-buying > .left {
+  font-size: 16px;
+  font-family: HannotateSC-W7;
+  font-weight: normal;
+  color: #ff5d22;
+  line-height: 17px;
+  padding: 0 24rpx;
+  border-right: 1px solid #E9E9E9;
+}
+.group-buying > .date {
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 400;
+  color: #666;
+  line-height: 14px;
+  padding-left: 10rpx;
+}
+.querySign {
+  display: flex;
+  width: 100%;
+  padding: 35rpx;
+  padding-left: 40rpx;
+  border-bottom: 1px solid #eee;
+  background-color: #fff;
+}
+.querySign > icon {
+  flex: 1;
+  text-align: center;
+}
+.querySign > view {
+  flex: 5;
+  font-size: 14px;
+  color: #333;
+  line-height: 40rpx;
+}
+.querySign > view > .rightTap {
+  float: right;
+  padding-right: 20rpx;
+  font-size: 20px;
+  color: #ccc;
+}
+.logout {
+  background-color: #FF5D22;
+  color: #fff;
+  position: fixed;
+  bottom: 20rpx;
+  border: 1px solid #fff;
+  font-size: 14px;
+  line-height: 60rpx;
+  width: 200rpx;
+}

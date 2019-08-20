@@ -1,0 +1,31 @@
+
+  <view  wx:if="{{addressList.length>0}}">
+    <block wx:for="{{addressList}}" wx:for-index="idx" wx:key="{{item.id}}">
+      <view class="w item">
+        <view class="con">
+          <view class="flex-wx left-select" wx:if="{{item.isSelected}}" animation="{{animationData}}">
+            <image src="../assets/images/icon_left_selected@2x.png" class="left-icon"/>
+          </view>
+          <view class="flex-wx left-select-mask" wx:if="{{item.isSelected}}" animation="{{animationData}}"/>
+          <view class="con-left" data-id="{{item.id}}" data-user_id="{{item.user_id}}" data-address_detail="{{item.address_detail}}" data-can_update="{{item.can_update}}" data-address_type="{{item.address_type}}" data-village_name="{{item.village_name}}" data-img_url="{{item.img_url}}" data-door_number="{{item.door_number}}" bindtap="onSelectAddressTap">
+            <view class="head">
+              <text class="title">{{item.village_name}}{{item.door_number}}</text>
+              <text class="w-label {{item.address_type == 1? 'address-label-ofen': 'address-label-auth'}}">{{item.address_type == 1 ? '认证地址': '常住地址'}}</text>
+            </view>
+            <view class="flex-row address">
+              <image src="../assets/images/icon_location@2x.png"/>
+              <text>{{item.address_detail}}</text>
+            </view>
+          </view>
+          <image wx:if="{{item.address_type==0}}" class="icon-edit" src="../assets/images/icon_edit@2x.png" data-id="{{item.id}}" data-index="{{idx}}" bindtap="onUpdateAddressTap"/>
+        </view>
+        <view wx:if="{{pageType !== 'select'}}" class="flex-row border-top footer" data-user_id="{{user_id}}" data-id="{{item.id}}" bindtap="changeDefaultTap">
+          <image wx:if="{{item.is_default==1}}" src="../assets/images/icon_choose_selected@2x.png" class="icon-choose"/>
+          <image wx:else src="../assets/images/icon_choose@2x.png" class="icon-choose"/>
+          <text>{{item.is_default == 1 ? '默认地址': '设为默认地址'}}</text>
+          <image wx:if="{{item.address_type==0}}" src="../assets/images/icon_delete@2x.png" class="icon-delete" data-user_id="{{item.user_id}}" data-id="{{item.id}}" catchtap="onDeleteTap"/>
+        </view>
+      </view>
+    </block>
+  </view>
+    <view class="w-btn-bottom" bindtap="add">添加新地址</view>

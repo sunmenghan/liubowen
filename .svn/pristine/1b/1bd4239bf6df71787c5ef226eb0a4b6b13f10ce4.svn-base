@@ -1,0 +1,64 @@
+page {
+  background: #f7f7f7;
+}
+.header {
+  background-color: #fff;
+  padding: 40rpx 0rpx 40rpx 40rpx;
+  margin-bottom: 20rpx;
+}
+.header > .project {
+  color: #333;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 50rpx;
+}
+.header > .total {
+  color: #333;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 34rpx;
+}
+.list {
+  padding: 32rpx 28rpx;
+  padding-bottom: 0;
+  background-color: #fff;
+  display: flex;
+  align-content: center;
+}
+.list > .iconImage {
+  flex: 1;
+  padding-bottom: 30rpx;
+  border-bottom: 1px solid #eee;
+}
+.list > .iconImage > .icon {
+  width: 70rpx;
+  height: 70rpx;
+  border-radius: 50%;
+}
+.list .right {
+  flex: 9;
+  padding-bottom: 30rpx;
+  border-bottom: 1px solid #eee;
+}
+.list .right > .rightItem {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.list .right > .rightItem > .name {
+  font-size: 14px;
+  color: #666;
+  font-weight: 400;
+  padding-left: 30rpx;
+}
+.list .right > .rightItem > .orange {
+  color: #ff5d22;
+  font-size: 13px;
+  font-weight: 400;
+}
+.list .right > .rightItem > .bottom {
+  color: #999;
+  font-size: 12px;
+  padding-left: 30rpx;
+}

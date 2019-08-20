@@ -1,0 +1,21 @@
+
+  <view>
+    <view class="swiper-tab">
+      <view class="swiper-tab-list" data-current="0" bindtap="swichNav">
+        <text class="title {{currentTab == 0 ? 'on' : '' }}" data-current="0" bindtap="swichNav">待审核</text>
+      </view>
+      <view class="swiper-tab-list" data-current="1" bindtap="swichNav">
+        <text class="title {{currentTab == 1 ? 'on' : '' }}" data-current="1" bindtap="swichNav">审核记录</text>
+      </view>
+    </view>
+
+    <swiper current="{{currentTab}}" class="swiper-box" duration="300" style="height:{{winHeight - 31}}px" bindchange="bindChange">
+      <swiper-item>
+        <view>待审核</view>
+      </swiper-item>
+
+      <swiper-item>
+        <view>审核记录</view>
+      </swiper-item>
+    </swiper>
+  </view>

@@ -1,0 +1,158 @@
+<style lang="less">
+  page {
+    background-color: #f7f7f7;
+  }
+  .prohibit{
+    color: #9B9B9B;
+    background-color: #D5D3D3;
+    border: 1px solid #9B9B9B;
+  }
+  .head{
+    background-color: #ffffff;
+    color: #333333;
+    height: 134rpx;
+    line-height: 134rpx;
+    .h_txt{
+      font-size: 36rpx;
+      font-weight: 600;
+      padding-left: 32rpx;
+    }
+    .h_num{
+      font-size: 24rpx;
+      padding-left: 24rpx;
+    }
+  }
+  .content{
+    background-color: #ffffff;
+    margin-top: 14rpx;
+    display: flex;
+    flex-direction: column;
+    .h_item{
+      display: flex;
+      align-items: center;
+      padding: 32rpx 0;
+      .h_avar{
+        width: 70rpx;
+        height: 70rpx;
+        border: 1px solid;
+        border-radius: 40rpx;
+        margin-left: 28rpx;
+      }
+      .c_context{
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        padding-left: 30rpx;
+        .c_name{
+          color: #666666;
+          font-size: 28rpx;
+          padding-bottom: 7rpx;
+        }
+        .c_text{
+          color: #999999;
+          font-size: 24rpx;
+          padding-top: 7rpx;
+        }
+      }
+      .c_btn{
+        display: flex;
+        font-size: 26rpx;
+        color: #E94816;
+        margin-left: 114rpx;
+        .btn{
+          width: 100rpx;
+          height: 50rpx;
+          text-align: center;
+          border: 1px solid #E94816;
+          background-color: rgba(233,72,22,0.2);
+          line-height: 50rpx;
+          margin-left: 16rpx;
+          -webkit-border-radius: 8rpx;
+          -moz-border-radius: 8rpx;
+          border-radius: 8rpx;
+        }
+      }
+      .c_success{
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        justify-content: flex-end;
+        margin-left: 130rpx;
+        .sign{
+          color: #E94816;
+          font-size: 26rpx;
+        }
+        .time{
+          color: #999999;
+          font-size: 24rpx;
+        }
+      }
+    }
+  }
+</style>
+
+<template>
+  <view>
+   <view class="head">
+     <text class="h_txt">幸福站点</text>
+     <text class="h_num">(共 5 户签到)</text>
+   </view>
+    <view class="content">
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import toastMixin from '../mixins/toast'
+  import api from '../mixins/api'
+  import util from '../mixins/util'
+
+
+  export default class signSearch extends wepy.page {
+    config = {
+      navigationBarTitleText: '认证审核',
+      navigationBarBackgroundColor: '#FF5D22',
+      navigationBarTextStyle: 'white'
+    }
+
+    data = {
+      winWidth: 0,
+      winHeight: 0,
+      currentTab: 0
+    }
+
+    onLoad () {
+      let that = this
+      // 获取系统信息
+      wx.getSystemInfo({
+        success: res => {
+          console.log(res)
+          that.winWidth = res.windowWidth
+          that.winHeight = res.windowHeight
+          that.$apply()
+        }
+      })
+    }
+
+    methods = {
+      // 滑动切换tab
+      bindChange (e) {
+        let that = this
+        that.currentTab = e.detail.current
+        that.$apply()
+      },
+
+      // 点击tab切换
+      swichNav (e) {
+        let that = this
+        if (that.data.currentTab === e.target.dataset.current) {
+          return false
+        } else {
+          that.currentTab = e.target.dataset.current
+          that.$apply()
+        }
+      }
+    }
+  }
+</script>

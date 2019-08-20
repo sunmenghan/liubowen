@@ -1,0 +1,196 @@
+<style lang="less">
+  page {
+    background-color: #f7f7f7;
+  }
+  .card {
+    padding: 0 20rpx;
+    margin-top: 20rpx;
+    border-bottom: 1px solid #eee;
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    justify-content:space-between;
+    min-height:128rpx;
+    position:relative;
+    background-color: #fff;
+    >.con {
+      flex: 1;
+      padding: 38rpx 0 38rpx 10rpx;
+      >.head {
+        >.title {
+          font-size: 14px;
+          color: #666;
+          margin-right: 30rpx;
+          white-space: normal;
+          word-break: break-all;
+        }
+      }
+    }
+    >.icon-edit {
+      flex: 0 0 34rpx;
+      margin-left: 20rpx;
+      width: 34rpx;
+      height: 34rpx;;
+    }
+  }
+
+  .footer {
+    height: 100rpx;
+    font-size: 13px;
+    color: #999;
+    padding-left: 28rpx;
+    background-color: #fff;
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    image {
+      width: 40rpx;
+      height: 40rpx;
+      margin-right: 24rpx;
+    }
+    > .icon_choose {
+      width: 40rpx;
+    }
+    text {
+      flex: 1;
+    }
+  }
+  .btn{
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 90rpx;
+    line-height: 90rpx;
+    text-align: center;
+    color: #ffffff;
+    background-color: #E94816;
+  }
+</style>
+
+<template>
+  <view>
+    <scroll-view
+        scroll-y
+        style="{{'height:'+(height-45)+'px'}}">
+      <block wx:for="{{contactList}}" wx:key="index" index="index" item="item">
+        <view class="card" data-id="{{item.id}}" data-index="{{index}}" @tap="chooseLinkBack">
+          <view class="con">
+            <view class="head">
+              <text class="title">{{item.link_name}}</text>
+              <text class="title">{{item.link_mobile}}</text>
+            </view>
+          </view>
+          <image src="../assets/images/icon_edit@2x.png" class="icon-edit" @tap="edit('{{item.id}}', '{{item.link_name}}', '{{item.link_mobile}}', '{{item.user_id}}')"/>
+        </view>
+
+        <view class="footer">
+          <image src="../assets/images/icon_choose_selected@2x.png" wx:if="{{item.is_default}}" class="icon_choose"/>
+          <image src="../assets/images/icon_choose@2x.png" wx:else class="icon_choose" @tap="select('{{item.user_id}}', '{{item.id}}')"/>
+          <text>{{item.is_default === 1 ? '默认联系人' : '设为默认联系人'}}</text>
+          <view wx:if="{{item.is_default === 0}}">
+            <image src="../assets/images/icon_delete@2x.png" class="icon-delete" @tap="delete('{{item.user_id}}', '{{item.id}}')"/>
+          </view>
+        </view>
+      </block>
+    </scroll-view>
+    <view class="btn" @tap="add">添加联系人</view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import toastMixin from '../mixins/toast'
+  import api from '../mixins/api'
+  import util from '../mixins/util'
+
+  export default class ContactList extends wepy.page {
+    config = {
+      navigationBarTitleText: '编辑常用联系人',
+      navigationBarBackgroundColor: '#FF5D22',
+      navigationBarTextStyle: 'white'
+    }
+
+    mixins = [toastMixin, api, util]
+
+    methods = {
+      // 修改
+      edit (id, name, phone, userId) {
+        this.$redirect('./contactAdd', {'id': id, 'name': name, 'phone': phone, 'user_id': userId})
+      },
+
+      chooseLinkBack(e) {
+        let index = e.currentTarget.dataset.index
+        let list = this.contactList
+        let data = list[index]
+        let pages = getCurrentPages()
+        let curr = pages[pages.length - 2]
+        curr.setData({
+          chooseLinkBack: data
+        })
+        wx.navigateBack({
+          detail: 1
+        })
+      },
+
+      // 选择默认联系人
+      select (userId, id) {
+        let that = this
+        that.defaultContact(userId, id).then(res => {
+          if (res.data.resultCode === 1000) {
+            that.selfToast('修改成功！', 'success')
+            setTimeout(() => {
+              that.seeContact(userId).then(res => {
+                that.contactList = res.data.data
+                that.$apply()
+              })
+            }, 1000)
+            that.hideToast()
+          }
+        })
+      },
+
+      // 删除
+      delete (userId, id) {
+        let that = this
+        that.deleteContact(userId, id).then(res => {
+          if (res.data.resultCode === 1000) {
+            that.selfToast('删除成功！', 'success')
+            setTimeout(() => {
+              that.seeContact(userId).then(res => {
+                that.contactList = res.data.data
+                that.$apply()
+              })
+            }, 1000)
+            that.hideToast()
+          }
+        })
+      },
+
+      // 添加
+      add() {
+        let id = this.user_id
+        wx.redirectTo({
+          url: './contactAdd?user_id=' + id
+        })
+      }
+    }
+
+    data = {
+      contactList: [],
+      height: 0,
+      user_id: 0
+    }
+
+    onLoad(option) {
+      let that = this
+      let h = wx.getSystemInfoSync().windowHeight
+      that.seeContact(option.user_id).then(res => {
+        that.contactList = res.data.data
+        that.height = h
+        that.user_id = option.user_id
+        that.$apply()
+      })
+    }
+  }
+</script>

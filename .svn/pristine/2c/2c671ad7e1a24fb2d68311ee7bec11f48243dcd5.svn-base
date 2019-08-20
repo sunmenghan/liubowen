@@ -1,0 +1,161 @@
+<style lang="less">
+  page {
+   background-color: #F7F7F7;
+  }
+
+  .title {
+    background-color: #fff;
+    padding-top: 60rpx;
+    padding-bottom: 100rpx;
+    text-align: center;
+    >.hint {
+      color: #666;
+      font-size: 16px;
+      margin-bottom: 30rpx;
+    }
+    >.money {
+      color: #333;
+      font-size: 14px;
+      >.price {
+        color: #e94816;
+      }
+    }
+  }
+
+  .box {
+    width: 324rpx;
+    height: 324rpx;
+    background-color: #fff;
+    margin: 0 auto;
+    border: 1px solid #e9e9e9;
+    margin-top: 54rpx;
+    margin-bottom: 20rpx;
+    >.codeImg {
+      width: 270rpx;
+      height: 270rpx;
+      margin: 0 auto;
+      margin-top: 26rpx;
+    }
+  }
+
+  .tip {
+    font-size: 12px;
+    color: #666;
+  }
+
+  .buttonGroup {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    margin-top: 70rpx;
+    > view {
+      width: 240rpx;
+      height: 68rpx;
+      line-height: 68rpx;
+      text-align: center;
+      font-size: 14px;
+    }
+    >.left {
+      border: 1px solid #ff5d22;
+      color: #ff5d22;
+    }
+    >.right {
+      color: #fff;
+      background-color: #ff5d22;
+    }
+  }
+</style>
+
+<template>
+  <view>
+    <view class="title">
+      <view class="hint">请在24小时内完成支付</view>
+      <view class="money">应付金额:<text class="price">\t{{price}} \t</text>元</view>
+
+      <view class="box">
+        <image src="{{imgUrl}}" class="codeImg"/>
+      </view>
+      <view class="tip">扫一扫上面的二维码图案，进行付款</view>
+    </view>
+
+    <view class="buttonGroup">
+      <view class="right" @tap="over">完成支付</view>
+      <view class="left" @tap="other">用户端去支付</view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import toastMixin from '../mixins/toast'
+  import api from '../mixins/api'
+  import util from '../mixins/util'
+
+  export default class Pay extends wepy.page {
+    config = {
+      navigationBarTitleText: '扫码提交',
+      navigationBarBackgroundColor: '#FF5D22',
+      navigationBarTextStyle: 'white'
+    }
+
+    data = {
+      id: '',
+      price: '',
+      imgUrl: ''
+    }
+    mixins = [toastMixin, api, util]
+
+    onLoad(option) {
+      let that = this
+      that.id = option.id;
+      that.price = option.price;
+      that.$apply()
+      let devUrl = this.url;
+
+      let token = wepy.getStorageSync('token');
+      let toke = wepy.getStorageSync('tokenid');
+
+      console.log(toke,"toke")
+
+       wx.downloadFile({
+        url: devUrl + 'soinfo/pay.json?so_id='+option.id,
+        header: {
+          'token': ''+token+'',
+          'tokenid': ''+toke+''
+        },
+        success (res) {
+          console.log(res, 22222)
+          console.log(res.tempFilePath)
+          that.imgUrl = res.tempFilePath
+          that.$apply()
+        },fail(res){
+          console.log(res,"啊哈哈")
+        }
+      })
+
+    }
+
+    methods = {
+      other () {
+        this.$redirect({
+          url: './index'
+        })
+      },
+
+      over () {
+        // 检查
+        this.checkPay(this.id).then(res => {
+          console.log(res)
+          if (res.data.data) {
+            this.$redirect({
+              url: './subList'
+            })
+          } else {
+            this.selfToast('支付失败！请重试！', 'none')
+            return false
+          }
+        })
+      }
+    }
+  }
+</script>

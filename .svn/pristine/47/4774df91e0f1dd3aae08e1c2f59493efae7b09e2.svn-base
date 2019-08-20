@@ -1,0 +1,9 @@
+
+  <view>
+   <view class="head">
+     <text class="h_txt">幸福站点</text>
+     <text class="h_num">(共 5 户签到)</text>
+   </view>
+    <view class="content">
+    </view>
+  </view>

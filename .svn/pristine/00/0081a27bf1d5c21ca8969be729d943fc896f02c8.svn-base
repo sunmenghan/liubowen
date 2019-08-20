@@ -1,0 +1,26 @@
+
+  <view>
+    <scroll-view scroll-y style="{{'height:'+(height-45)+'px'}}">
+      <block  wx:for="{{contactList}}" wx:key="index" index="index" item="item">
+        <view class="card" data-id="{{item.id}}" data-index="{{index}}" bindtap="chooseLinkBack">
+          <view class="con">
+            <view class="head">
+              <text class="title">{{item.link_name}}</text>
+              <text class="title">{{item.link_mobile}}</text>
+            </view>
+          </view>
+          <image src="../assets/images/icon_edit@2x.png" class="icon-edit" bindtap="edit" data-wpyedit-a="{{item.id}}" data-wpyedit-b="{{item.link_name}}" data-wpyedit-c="{{item.link_mobile}}" data-wpyedit-d="{{item.user_id}}"/>
+        </view>
+
+        <view class="footer">
+          <image src="../assets/images/icon_choose_selected@2x.png" wx:if="{{item.is_default}}" class="icon_choose"/>
+          <image src="../assets/images/icon_choose@2x.png" wx:else class="icon_choose" bindtap="select" data-wpyselect-a="{{item.user_id}}" data-wpyselect-b="{{item.id}}"/>
+          <text>{{item.is_default === 1 ? '默认联系人' : '设为默认联系人'}}</text>
+          <view wx:if="{{item.is_default === 0}}">
+            <image src="../assets/images/icon_delete@2x.png" class="icon-delete" bindtap="delete" data-wpydelete-a="{{item.user_id}}" data-wpydelete-b="{{item.id}}"/>
+          </view>
+        </view>
+      </block>
+    </scroll-view>
+    <view class="btn" bindtap="add">添加联系人</view>
+  </view>

@@ -1,0 +1,27 @@
+<template>
+  <view></view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import api from '../mixins/api'
+  import toast from '../mixins/toast'
+
+  export default class SignIn extends wepy.page {
+    config = {
+      navigationBarTitleText: '签到',
+      navigationBarBackgroundColor: '#FF5D22',
+      navigationBarTextStyle: 'white'
+    }
+
+    mixins = [api, toast]
+
+    methods = {
+
+    }
+
+    onload() {
+
+    }
+  }
+</script>

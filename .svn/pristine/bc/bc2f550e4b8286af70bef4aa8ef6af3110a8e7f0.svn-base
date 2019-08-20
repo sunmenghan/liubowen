@@ -1,0 +1,391 @@
+<style>
+  page {
+    background-color: #f7f7f7;
+    font-size: 28rpx;
+    font-family: -apple-system-font, Helvetica Neue, Helvetica, sans-serif;
+    font-family: 'PingFangSC',
+    '微软雅黑',
+    Helvetica,
+    'Hiragino Sans GB',
+    'Microsoft Yahei',
+    Arial,
+    sans-serif;
+    box-sizing: border-box;
+    color: #333;
+    padding-bottom: 110rpx;
+  }
+  .w{
+    padding-left:0;
+  }
+  .item {
+    margin-top: 20rpx;
+    position: relative;
+  }
+
+  .footer {
+    height: 100rpx;
+    font-size: 26rpx;
+    color: #999;
+    padding-left:28rpx;
+  }
+
+  .footer image {
+    width: 40rpx;
+    height: 40rpx;
+    margin-right: 24rpx;
+  }
+
+  .footer .icon-choose {
+    width: 40rpx;
+  }
+
+  .footer .icon-delete {
+    flex: 0 0 30rpx;
+    width: 30rpx;
+    height: 30rpx;
+    margin: 0;
+  }
+
+  .footer text {
+    flex: 1;
+  }
+
+  .con {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    min-height:128rpx;
+    position: relative;
+  }
+
+  .icon-edit {
+    flex: 0 0 34rpx;
+    margin-left: 20rpx;
+    width: 34rpx;
+    height: 34rpx;
+  }
+
+  .con-left {
+    flex: 1;
+    padding: 38rpx 0 38rpx 28rpx;
+  }
+
+  .con-left .title {
+    margin-right: 30rpx;
+    white-space:normal;
+    word-break:break-all;
+  }
+
+  .con-left .w-label {
+    font-size: 22rpx;
+    padding: 0 10rpx;
+    margin-left: 16rpx;
+  }
+
+  .left-select{
+    width:140rpx;
+    height:100%;
+    position: absolute;
+    margin-right:10rpx;
+    background-color: #F0F0F0;
+  }
+  .left-select .left-icon{
+    width:42rpx;
+    height:28rpx;
+  }
+  .left-select-mask{
+    width:140rpx;
+    min-height:128rpx;
+    margin-right:10rpx;
+  }
+  .address-label-auth{
+    border-color:#FF5D22;
+    color:#FF5D22;
+  }
+  .address-label-ofen{
+    border-color:#3979D4;
+    color:#3979D4;
+  }
+  .address{
+    font-size:26rpx;
+    color:#666;
+    margin-top:26rpx;
+    white-space:normal;
+    word-break:break-all;
+  }
+  .address image{
+    flex: 0 0 50rp;
+    width:50rpx;
+    height:50rpx;
+    margin-right:10rpx;
+  }
+  .address text{
+    flex:1;
+  }
+  .con .head{
+    padding-left:12rpx;
+  }
+  pages {
+    position: relative;
+    z-index: 9999998;
+    background: #fff;
+  }
+</style>
+
+<template>
+  <view wx:if="{{addressList.length>0}}">
+    <block wx:for="{{addressList}}" wx:for-index="idx" wx:key="{{item.id}}">
+      <view class="w item">
+        <view class="con">
+          <view class="flex-wx left-select" wx:if="{{item.isSelected}}" animation='{{animationData}}'>
+            <image src="../assets/images/icon_left_selected@2x.png" class="left-icon"></image>
+          </view>
+          <view class="flex-wx left-select-mask" wx:if="{{item.isSelected}}" animation='{{animationData}}'></view>
+          <view class="con-left" data-id="{{item.id}}" data-user_id="{{item.user_id}}" data-address_detail="{{item.address_detail}}" data-can_update="{{item.can_update}}" data-address_type="{{item.address_type}}" data-village_name="{{item.village_name}}" data-img_url="{{item.img_url}}" data-door_number="{{item.door_number}}" bindtap="onSelectAddressTap">
+            <view class="head">
+              <text class="title">{{item.village_name}}{{item.door_number}}</text>
+              <text class="w-label {{item.address_type == 1? 'address-label-ofen': 'address-label-auth'}}">{{item.address_type == 1 ? '认证地址': '常住地址'}}</text>
+            </view>
+            <view class="flex-row address" >
+              <image src="../assets/images/icon_location@2x.png"></image>
+              <text>{{item.address_detail}}</text>
+            </view>
+          </view>
+          <image wx:if="{{item.address_type==0}}" class="icon-edit" src="../assets/images/icon_edit@2x.png" data-id="{{item.id}}" data-index="{{idx}}" bindtap="onUpdateAddressTap"></image>
+        </view>
+        <view wx:if="{{pageType !== 'select'}}" class="flex-row border-top footer" data-user_id="{{user_id}}" data-id="{{item.id}}" bindtap="changeDefaultTap">
+          <image wx:if="{{item.is_default==1}}" src="../assets/images/icon_choose_selected@2x.png" class="icon-choose"></image>
+          <image wx:else src="../assets/images/icon_choose@2x.png" class="icon-choose"></image>
+          <text>{{item.is_default == 1 ? '默认地址': '设为默认地址'}}</text>
+          <image wx:if="{{item.address_type==0}}" src="../assets/images/icon_delete@2x.png" class="icon-delete" data-user_id="{{item.user_id}}" data-id="{{item.id}}" catchtap="onDeleteTap"></image>
+        </view>
+      </view>
+    </block>
+  </view>
+    <view class="w-btn-bottom" @tap="add">添加新地址</view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import toastMixin from '../mixins/toast'
+  import api from '../mixins/api'
+  import util from '../mixins/util'
+
+  export default class Audit extends wepy.page {
+    config = {
+      navigationBarTitleText: '选择地址',
+      navigationBarBackgroundColor: '#FF5D22',
+      navigationBarTextStyle: 'white'
+    }
+
+    mixins = [toastMixin, api, util]
+
+    data = {
+      addressList: [],
+      animationData: {},
+      user_id: ''
+    }
+
+    onLoad (option) {
+      console.log('options', option)
+      let that = this
+      let data = {
+        user_id: option.user_id,
+        page: 1,
+        pagesize: 20
+      }
+      this.getAddress(data).then(res => {
+        that.addressList = res.data.data
+        that.setData({
+          addressList: res.data.data,
+          user_id: option.user_id
+        })
+        that.user_id = option.user_id
+        that.$apply()
+        console.log('id', that.user_id)
+      })
+    }
+
+    methods = {
+
+    }
+
+    onUpdateAddressTap(event) {
+      let data = this.addressList
+      let index = this.getDataSet(event, 'index')
+      let item = data[index]
+      // let address = encodeURI(this.getDataSet(event, 'address'));
+      // console.log(item)
+      this.$navigate('./modifyAddress', {data: JSON.stringify(item)})
+    }
+
+    doChooseBack(para) {
+      console.log('para', para)
+      let pages = getCurrentPages()
+      let prevPage = []
+      if (pages.length === 5) {
+        prevPage = pages[pages.length - 3]
+      } else {
+        prevPage = pages[pages.length - 2]
+      }
+      console.log('prevPage', pages)
+      prevPage.setData({
+        chooseAddressBack: para
+      })
+      setTimeout(() => {
+        let del = 1
+        if (pages.length === 5) {
+          del = 2
+        }
+        wx.navigateBack({
+          delta: del
+        })
+      }, 500)
+    }
+
+    doChooseTap(id, para) {
+      console.log('到了这里')
+      var that = this
+      var animation = wx.createAnimation({
+        duration: 200,
+        timingFunction: 'linear'
+      })
+      that.animation = animation
+      animation.translateX(-140).step()
+      let addressList = this.data.addressList
+      addressList.forEach((ele) => {
+        if (ele.id == id) {
+          ele.isSelected = true
+        } else {
+          ele.isSelected = false
+        }
+      })
+      that.setData({
+        animationData: animation.export(),
+        addressList: this.data.addressList
+      })
+      setTimeout(function () {
+        animation.translateX(0).step()
+        that.setData({
+          animationData: animation.export()
+        })
+      }, 50)
+      that.doChooseBack(para)
+    }
+
+    onSelectAddressTap (event) {
+      let can_update = this.getDataSet(event, 'can_update')
+      let id = this.getDataSet(event, 'id')
+      let user_id = this.getDataSet(event, 'user_id')
+      let address_type = this.getDataSet(event, 'address_type')
+      let para = {}
+      if (address_type == 1) {
+        let village_name = this.getDataSet(event, 'village_name')
+        let img_url = this.getDataSet(event, 'img_url')
+        let door_number = this.getDataSet(event, 'door_number')
+        para = {
+          id: id,
+          address_detail: village_name,
+          can_update: can_update,
+          address_type: address_type,
+          village_name: village_name,
+          img_url: img_url,
+          door_number: door_number,
+          hasValue: true,
+          user_id: user_id
+        }
+      }
+      if (address_type == 0) {
+        let village_name = this.getDataSet(event, 'village_name')
+        let door_number = this.getDataSet(event, 'door_number')
+        para = {
+          id: id,
+          address_detail: village_name,
+          can_update: can_update,
+          address_type: address_type,
+          door_number: door_number,
+          hasValue: true,
+          user_id: user_id
+        }
+      }
+      this.doChooseTap(id, para)
+    }
+
+    showConfirm(content, typeFlag, id) {
+      console.log('id', id)
+      let that = this
+      wx.showModal({
+        title: '',
+        content: content || '',
+        showCancel: true,
+        cancelText: '取消',
+        cancelColor: '#999999',
+        confirmText: '确定',
+        confirmColor: '#FF5D22',
+        success: function (res) {
+          if (res.confirm) {
+            switch (typeFlag) {
+              case 'changeDefaultTap':
+                that.doDefaultTap(id)
+                break
+              case 'onDeleteTap':
+                that.doDeleteTap(id)
+                break
+            }
+          } else if (res.cancel) {
+            console.log('用户点击取消')
+          }
+          // if (res.confirm) {
+          //   that.doDefaultTap(id);
+          // }
+        }
+      })
+    }
+    add() {
+      let user = this.user_id
+      this.$navigate('./addAddress', {user: user})
+    }
+
+    doDefaultTap(id) {
+      let that = this
+      this.address_update(id).then(res => {
+        let addressList = that.addressList
+        for (let o of addressList) {
+          o.is_default = 0
+          if (o.id == id.id) {
+            o.is_default = 1
+          }
+        }
+        that.addressList = addressList
+        that.$apply()
+        console.log('addressList', that)
+        that.showToasts('设置成功', 'success')
+      })
+    }
+
+    doDeleteTap(id) {
+      console.log('this', this)
+      let that = this
+      this.del_adress(id).then(res => {
+        that.showToasts('删除成功', 'success', 1000, function () {
+          that.$navigate('./address', {user_id: id.user_id})
+        })
+      })
+    }
+
+    changeDefaultTap(event) {
+      let id = this.getDataSet(event, 'id')
+      let user_id = this.getDataSet(event, 'user_id')
+      this.showConfirm('确定设置为默认地址吗?', 'changeDefaultTap', {id: id, user_id: user_id})
+    }
+
+    onDeleteTap(event) {
+      let id = this.getDataSet(event, 'id')
+      let user_id = this.getDataSet(event, 'user_id')
+      console.log('这是id')
+      console.log(id)
+      this.showConfirm('确定删除吗?', 'onDeleteTap', {id: id, user_id: user_id})
+    }
+  }
+</script>

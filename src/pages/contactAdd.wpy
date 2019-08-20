@@ -1,0 +1,122 @@
+<style lang="less">
+  page {
+    background-color: #f7f7f7;
+  }
+  .main {
+    border-top:1px solid #F7F7F7;
+  }
+  .form-con {
+    background-color:#fff;
+    padding: 0 28rpx;
+  }
+  .form-group {
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    justify-content:space-between;
+    height:108rpx;
+    line-height:108rpx;
+    border-bottom:1px solid #F7F7F7;
+    > input {
+      font-size: 14px;
+      color: #333;
+    }
+  }
+  .border-none {
+    border: none;
+  }
+  .btn-default {
+    margin:40rpx 28rpx;
+    line-height:90rpx;
+    font-size:30rpx;
+    background-color:#ff5d22;
+    color:#fff;
+    border-color:#ff5d22;
+  }
+</style>
+
+<template>
+  <view class="main">
+    <view class="form-con">
+      <view class="form-group">
+        <input type="text" placeholder="姓名" value="{{contact.name}}" bindinput="nameInput"/>
+      </view>
+      <view class="form-group border-none">
+        <input type="number" maxlength="11" placeholder="电话" value="{{contact.phone}}" bindinput="phoneInput"/>
+      </view>
+    </view>
+
+    <button class="btn-default btn-confirm" @tap="onConfirmTap">保存</button>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import toastMixin from '../mixins/toast'
+  import api from '../mixins/api'
+  import util from '../mixins/util'
+
+  export default class ContactAdd extends wepy.page {
+    config = {
+      navigationBarTitleText: '编辑联系人',
+      navigationBarBackgroundColor: '#FF5D22',
+      navigationBarTextStyle: 'white'
+    }
+
+    mixins = [toastMixin, api, util]
+
+    methods = {
+      nameInput (e) {
+        this.contact.name = e.detail.value
+        this.$apply()
+      },
+
+      phoneInput (e) {
+        this.contact.phone = e.detail.value
+        this.$apply()
+      },
+
+      onConfirmTap () {
+        let that = this
+        if (!that.contact.name) {
+          that.selfToast('请输入姓名!', 'none')
+          return false
+        }
+        if (!that.checkPhone(that.contact.phone)) {
+          that.selfToast('请输入正确的手机号!', 'none')
+          return false
+        }
+        console.log(that.contact)
+        const param = {
+          link_name: that.contact.name,
+          link_mobile: that.contact.phone,
+          user_id: that.contact.user_id
+        }
+        console.log(param)
+        that.addContact(param).then(res => {
+          console.log(res)
+          if (res.data.resultCode === 1000) {
+            that.selfToast('操作成功', 'success')
+            setTimeout(() => {
+              that.hideToast()
+              that.$redirect('./contactList', {'user_id': that.contact.user_id})
+            }, 500)
+          } else {
+            that.selfToast(String(res.error), 'none')
+            that.hideToast()
+          }
+        })
+      }
+    }
+
+    data = {
+      contact: [],
+    }
+
+    onLoad(option) {
+      console.log(option)
+      this.contact = option
+      this.$apply()
+    }
+  }
+</script>

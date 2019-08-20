@@ -1,0 +1,42 @@
+
+  <view>
+    <view class="list">
+      <view class="group" bindtap="toAddress" data-wpytoaddress-a="{{list.userlinklist[0].user_id}}">
+        <view>收货地址</view>
+        <text class="address">{{list.userreceivelist[0].village_name || addlist.village_name}} \t {{list.userreceivelist[0].door_number || addlist.door_number}} \t\t</text>
+         <text class="gray">></text>
+      </view>
+      <view class="group" bindtap="editTel" data-wpyedittel-a="{{list.userreceivelist[0].user_id}}">
+        <view>联系人</view>
+        <text class="address">{{user.link_name}} \t {{user.link_mobile}} \t\t</text>
+        <text class="gray">></text>
+      </view>
+    </view>
+
+    <view class="title">项目订金</view>
+
+    <view class="main">
+      <image src="{{list.projectinfo.project_img_url}}"/>
+      <view class="just">
+        <view class="name">{{list.projectinfo.project_name}}</view>
+      </view>
+    </view>
+    <view class="main_text">
+      <view class="main_item">
+        <view class="m_i_txt">
+          <text class="m_i_name">项目订金</text>
+          <text class="m_i_date">(订金有效期三个月)</text>
+        </view>
+        <view class="price">￥{{list.projectinfo.so_price}}</view>
+      </view>
+      <view class="totalprice">
+        总计：￥{{list.projectinfo.so_price}}
+      </view>
+    </view>
+
+    <view class="bottom">
+      <view class="money">应收金额：</view>
+      <view class="total">{{list.projectinfo.so_price}}元</view>
+      <view class="div" bindtap="commit" data-wpycommit-a="{{list.userreceivelist[0].user_id}}" data-wpycommit-b="{{list.userreceivelist[0].id}}" data-wpycommit-c="{{user.id}}">提交</view>
+    </view>
+  </view>

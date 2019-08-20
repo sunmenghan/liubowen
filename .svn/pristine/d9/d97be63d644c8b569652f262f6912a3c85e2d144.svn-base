@@ -1,0 +1,95 @@
+.menu {
+  width: 100%;
+  position: fixed;
+  top: 55px;
+  left: 0;
+  background-color: rgba(1, 1, 1, 0.5);
+}
+.menu-con {
+  position: fixed;
+  width: 100%;
+  top: 55px;
+  left: 0;
+  padding-bottom: 20rpx;
+  z-index: 10;
+  animation: all .3s linear;
+}
+.menu-con .m-con {
+  display: flex;
+  flex-direction: column;
+  padding-left: 40rpx;
+  background-color: #ffffff;
+  align-items: flex-start;
+  padding-bottom: 12rpx;
+}
+.menu-con .m-con .title {
+  height: 44px;
+  line-height: 44px;
+  color: #333333;
+  font-size: 14px;
+}
+.menu-con .m-con .m-item {
+  display: flex;
+  align-items: flex-start;
+  font-size: 14px;
+  color: #666666;
+  width: 100%;
+}
+.menu-con .m-con .m-item .radio-group {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+}
+.menu-con .m-con .m-item .radio-group .radio {
+  display: flex;
+  width: 33%;
+  align-items: center;
+  margin-top: 20rpx;
+  margin-bottom: 14rpx;
+}
+.menu-con .foot {
+  display: flex;
+  height: 50px;
+  line-height: 50px;
+  text-align: center;
+}
+.menu-con .foot .clear {
+  background-color: #E9E9E9;
+  color: #999999;
+  font-size: 15px;
+  flex: 1;
+}
+.menu-con .foot .confirm {
+  background-color: #FF5D22;
+  color: #ffffff;
+  font-size: 15px;
+  flex: 1;
+}
+radio .wx-radio-input.wx-radio-input-checked::before {
+  border-radius: 50%;
+  /* 圆角 */
+  width: 22px;
+  /* 选中后对勾大小，不要超过背景的尺寸 */
+  height: 22px;
+  /* 选中后对勾大小，不要超过背景的尺寸 */
+  line-height: 22px;
+  text-align: center;
+  font-size: 30rpx;
+  /* 对勾大小 30rpx */
+  color: #333333;
+  /* 对勾颜色 白色 */
+  background: transparent;
+  transform: translate(-50%, -50%) scale(1);
+  -webkit-transform: translate(-50%, -50%) scale(1);
+}
+radio .wx-radio-input {
+  border-radius: 50%;
+  /* 圆角 */
+  width: 22px;
+  height: 22px;
+  background-color: #f7f7f7;
+  border: none;
+}
+showAnimation {
+  color: red !important;
+}

@@ -1,0 +1,272 @@
+<style lang="less">
+  page {
+    background-color: #f7f7f7;
+  }
+  .list {
+    line-height: 100rpx;
+    color: #999;
+    font-size: 14px;
+    padding: 0 28rpx;
+    background-color: #fff;
+    >.group {
+      display: flex;
+      flex-direction: row;
+      flex: 4;
+      justify-content: space-between;
+      border-bottom: 1px solid #eee;
+      > .address {
+        color: #666;
+        flex: 5;
+        margin-right: 10rpx;
+        text-align: right;
+      }
+      >.gray {
+        // flex: 1;
+        color: #999;
+      }
+    }
+  }
+
+  .title {
+    background-color: #fff;
+    margin-top: 20rpx;
+    font-size: 14px;
+    color: #333;
+    line-height: 88rpx;
+    padding-left: 28rpx;
+    border-bottom: 1px solid #eee;
+  }
+
+  .main {
+    padding: 30rpx 0;
+    background-color: #fff;
+    display: flex;
+    >image {
+      width: 240rpx;
+      height: 180rpx;
+    }
+  }
+
+  .just {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    >.name {
+      color: #333;
+      font-size: 14px;
+      margin-left: 40rpx;
+    }
+    >.price {
+      color: #e94816;
+      font-size: 14px;
+      font-weight: 500;
+    }
+  }
+
+  .bottom {
+    position: fixed;
+    background-color: #fff;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 90rpx;
+    line-height: 90rpx;
+    display: flex;
+    font-size: 14px;
+    >.money {
+      flex: 5;
+      color: #333;
+      text-align: right;
+    }
+    >.total {
+      flex: 2;
+      color: #e94816;
+    }
+    >.div {
+      flex: 3;
+      background-color: #e94816;
+      color: #fff;
+      font-size: 15px;
+      text-align: center;
+    }
+  }
+  .main_text{
+    background-color: #ffffff;
+    margin-top:20rpx;
+    .main_item{
+      display: flex;
+      align-items: center;
+      height: 108rpx;
+      width: 90%;
+      margin: 0 auto;
+      justify-content: space-between;
+      .m_i_txt{
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        .m_i_name{
+          color:#333333;
+          font-size: 28rpx;
+        }
+        .m_i_date{
+          font-size: 24rpx;
+          color: #999999;
+        }
+      }
+      .price{
+        color: #333333;
+        font-size: 28rpx;
+      }
+    }
+    .totalprice{
+      width: 90%;
+      margin: 0 auto;
+      height: 108rpx;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      color: #E94816;
+      font-size: 28rpx;
+      border-top: 1rpx solid rgba(180,180,180,0.2);
+    }
+  }
+</style>
+
+<template>
+  <view>
+    <view class="list">
+      <view class="group" @tap="toAddress('{{list.userlinklist[0].user_id}}')">
+        <view>收货地址</view>
+        <text class="address">{{list.userreceivelist[0].village_name}} \t {{list.userreceivelist[0].door_number}} \t\t</text>
+         <text class="gray">></text>
+      </view>
+      <view class="group" @tap="editTel('{{list.userreceivelist[0].user_id}}')">
+        <view>联系人</view>
+        <text class="address">{{user.link_name}} \t {{user.link_mobile}} \t\t</text>
+        <text class="gray">></text>
+      </view>
+    </view>
+
+    <view class="title">项目订金</view>
+
+    <view class="main">
+      <image src="{{list.projectinfo.project_img_url}}"/>
+      <view class="just">
+        <view class="name">{{list.projectinfo.project_name}}</view>
+      </view>
+    </view>
+    <view class="main_text">
+      <view class="main_item">
+        <view class="m_i_txt">
+          <text class="m_i_name">项目订金</text>
+          <text class="m_i_date">(订金有效期两个月)</text>
+        </view>
+        <view class="price">￥{{list.projectinfo.so_price}}</view>
+      </view>
+      <view class="totalprice">
+        总计：￥{{list.projectinfo.so_price}}
+      </view>
+    </view>
+
+    <view class="bottom">
+      <view class="money">应收金额：</view>
+      <view class="total">{{list.projectinfo.so_price}}元</view>
+      <view class="div" @tap="commit('{{list.userreceivelist[0].user_id}}',
+                                     '{{list.userreceivelist[0].id}}',
+                                     '{{user.id}}')">提交</view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import toastMixin from '../mixins/toast'
+  import api from '../mixins/api'
+  import util from '../mixins/util'
+
+  export default class EditSub extends wepy.page {
+    config = {
+      navigationBarTitleText: '填写订金单',
+      navigationBarBackgroundColor: '#FF5D22',
+      navigationBarTextStyle: 'white'
+    }
+
+    mixins = [toastMixin, api, util]
+
+    data = {
+      list: [],
+      user: {},
+      userId: '',
+      projectId: '',
+      chooseAddressBack: null,
+      chooseLinkBack: null
+    }
+
+    onLoad(option) {
+      let that = this
+      that.userId = option.userId
+      that.projectId = option.projectId;
+
+      let tokenid = wepy.getStorageSync('tokenid');
+
+      console.log(tokenid,"tokenidtokenidtokenid")
+
+    }
+
+    onShow() {
+            let that = this;
+            let userId = that.userId;
+
+            let projectId = that.projectId;
+
+            let pages = getCurrentPages()
+            let currPage = pages[pages.length - 1];
+
+            console.log('curr', currPage)
+
+            that.getSub(userId, projectId).then(res => {
+              res.data.data.userlinklist.forEach(e => {
+                if (e.is_default === 1) {
+                  that.user = e
+                }
+              })
+              if (currPage.data.chooseAddressBack) {
+                res.data.data.userreceivelist[0].village_name = currPage.data.chooseAddressBack.address_detail
+                res.data.data.userreceivelist[0].door_number = currPage.data.chooseAddressBack.door_number
+              }
+              if (currPage.data.chooseLinkBack) {
+                console.log('c',currPage.data.chooseLinkBack)
+                that.user = currPage.data.chooseLinkBack
+              }
+              that.list = res.data.data;
+              that.$apply()
+            })
+    }
+
+    methods = {
+      commit (userId, receiveId, linkId, projectId) {
+        let that = this
+        let id = wepy.getStorageSync('activity_project_id')
+
+        that.commitSub(userId, receiveId, linkId, id).then(res => {
+          if (res.data.resultCode === 1000) {
+              that.$navigate('./pay', {id: res.data.data, price: that.list.projectinfo.so_price})
+            } else {
+              that.selfToast(res.data.error, 'none')
+            }
+        })
+      },
+
+      // 修改联系人
+      editTel (id) {
+        this.$navigate('./contactList', {'user_id': id})
+      },
+      // 去选择联系人
+      toAddress (id) {
+        this.$navigate('./address', {'user_id': id})
+      }
+    }
+  }
+</script>

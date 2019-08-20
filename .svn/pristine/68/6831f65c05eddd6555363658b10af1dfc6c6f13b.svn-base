@@ -1,0 +1,106 @@
+<style lang="less">
+  page {
+    background-color: #f7f7f7;
+    padding-top: 20rpx;
+  }
+  .main {
+    width: 90%;
+    margin: 0 auto;
+    >.card {
+      background-color: #fff;
+      margin-bottom: 20rpx;
+      padding-left: 20rpx;
+      border-radius: 10rpx;
+      >.time {
+        font-size: 14px;
+        color: #666;
+        line-height: 80rpx;
+        border-bottom: 1px solid #eee;
+      }
+      >.group {
+        padding: 20rpx 0;
+        >.project {
+          font-size: 16px;
+          font-weight: 600;
+          color: #333;
+          line-height: 60rpx;
+        }
+      }
+    }
+    >.gray {
+      background-color: #eee;
+      >.group {
+        >.project {
+          color: #999;
+        }
+      }
+    }
+    >.dersci {
+      width: 90%;
+      margin: 0 auto;
+      font-size: 12px;
+      color: #999;
+      line-height: 28rpx;
+    }
+  }
+</style>
+
+<template>
+  <view class="main">
+    <block wx:for="{{list}}" wx:key="index" index="index" item="item">
+      <view class="card {{item.overduce === 0 ? 'gray' : ''}}">
+        <view class="time">{{item.beg_at}} - {{item.end_at}}</view>
+        <view class="group">
+          <view class="project" wx:if="{{item.sign}}">签到项目：{{item.project_name}}</view>
+          <view class="project" wx:if="{{item.sub}}">交订金项目：{{item.project_name}}</view>
+        </view>
+      </view>
+    </block>
+
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import toastMixin from '../mixins/toast'
+  import api from '../mixins/api'
+  import util from '../mixins/util'
+
+  export default class GroupBuy extends wepy.page {
+    config = {
+      navigationBarTitleText: '集采安排',
+      navigationBarBackgroundColor: '#FF5D22',
+      navigationBarTextStyle: 'white'
+    }
+
+    mixins = [toastMixin, api, util]
+
+    methods = {
+
+    }
+
+    data = {
+      list: []
+    }
+
+    onLoad() {
+      let that = this
+      that.activityplan().then(res => {
+        console.log(res.data.data)
+        res.data.data.forEach(e => {
+          e.beg_at = e.beg_at.substring(0, 16)
+          e.end_at = e.end_at.substring(11, 16)
+          if (e.oper_type.indexOf('1') !== -1) {
+            e.sign = true
+          }
+          if (e.oper_type.indexOf('2') !== -1) {
+            e.sub = true
+          }
+          console.log(e)
+        })
+        that.list = res.data.data
+        that.$apply()
+      })
+    }
+  }
+</script>

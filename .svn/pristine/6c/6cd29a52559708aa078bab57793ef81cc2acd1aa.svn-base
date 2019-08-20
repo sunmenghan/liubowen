@@ -1,0 +1,108 @@
+<style lang="less">
+  page {
+    background-color: #f7f7f7;
+  }
+  .swiper-tab{
+    background-color: #fff;
+    border-bottom: 1px solid #eee;
+    width: 100%;
+    text-align: center;
+    line-height: 80rpx;}
+  .swiper-tab-list{  font-size: 30rpx;
+    display: inline-block;
+    text-align: center;
+    width: 50%;
+    color: #777777;
+  }
+  .title {
+    width: 140rpx;
+    display: inline-block;
+    font-size: 14px;
+    color: #666;
+  }
+  .on { 
+    border-bottom: 4rpx solid #E94816;
+  }
+  
+  .swiper-box{ display: block; height: 100%; width: 100%; overflow: hidden; }
+  .swiper-box view{
+    text-align: center;
+  }
+</style>
+
+<template>
+  <view>
+    <view class="swiper-tab">
+      <view class="swiper-tab-list" data-current="0" @tap="swichNav">
+        <text class="title {{currentTab == 0 ? 'on' : '' }}" data-current="0" @tap="swichNav">待审核</text>
+      </view>
+      <view class="swiper-tab-list" data-current="1" @tap="swichNav">
+        <text class="title {{currentTab == 1 ? 'on' : '' }}" data-current="1" @tap="swichNav">审核记录</text>
+      </view>
+    </view>
+
+    <swiper current="{{currentTab}}" class="swiper-box" duration="300" style="height:{{winHeight - 31}}px" bindchange="bindChange">
+      <swiper-item>
+        <view>待审核</view>
+      </swiper-item>
+
+      <swiper-item>
+        <view>审核记录</view>
+      </swiper-item>
+    </swiper>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  // import toastMixin from '../mixins/toast'
+  // import api from '../mixins/api'
+  // import util from '../mixins/util'
+
+  export default class Audit extends wepy.page {
+    config = {
+      navigationBarTitleText: '认证审核',
+      navigationBarBackgroundColor: '#FF5D22',
+      navigationBarTextStyle: 'white'
+    }
+
+    data = {
+      winWidth: 0,
+      winHeight: 0,
+      currentTab: 0
+    }
+
+    onLoad () {
+      let that = this
+      // 获取系统信息
+      wx.getSystemInfo({
+        success: res => {
+          console.log(res)
+          that.winWidth = res.windowWidth
+          that.winHeight = res.windowHeight
+          that.$apply()
+        }
+      })
+    }
+
+    methods = {
+      // 滑动切换tab
+      bindChange (e) {
+        let that = this
+        that.currentTab = e.detail.current
+        that.$apply()
+      },
+
+      // 点击tab切换
+      swichNav (e) {
+        let that = this
+        if (that.data.currentTab === e.target.dataset.current) {
+          return false
+        } else {
+          that.currentTab = e.target.dataset.current
+          that.$apply()
+        }
+      }
+    }
+  }
+</script>

@@ -1,0 +1,64 @@
+page {
+  background-color: #f7f7f7;
+}
+.card {
+  padding: 0 20rpx;
+  margin-top: 20rpx;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 128rpx;
+  position: relative;
+  background-color: #fff;
+}
+.card > .con {
+  flex: 1;
+  padding: 38rpx 0 38rpx 10rpx;
+}
+.card > .con > .head > .title {
+  font-size: 14px;
+  color: #666;
+  margin-right: 30rpx;
+  white-space: normal;
+  word-break: break-all;
+}
+.card > .icon-edit {
+  flex: 0 0 34rpx;
+  margin-left: 20rpx;
+  width: 34rpx;
+  height: 34rpx;
+}
+.footer {
+  height: 100rpx;
+  font-size: 13px;
+  color: #999;
+  padding-left: 28rpx;
+  background-color: #fff;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.footer image {
+  width: 40rpx;
+  height: 40rpx;
+  margin-right: 24rpx;
+}
+.footer > .icon_choose {
+  width: 40rpx;
+}
+.footer text {
+  flex: 1;
+}
+.btn {
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 90rpx;
+  line-height: 90rpx;
+  text-align: center;
+  color: #ffffff;
+  background-color: #E94816;
+}

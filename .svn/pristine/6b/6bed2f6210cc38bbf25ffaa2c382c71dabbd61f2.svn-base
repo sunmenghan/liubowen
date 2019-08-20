@@ -1,0 +1,20 @@
+
+  <view class="main">
+
+    <view class="imgView">
+      <image src="../assets/images/logo@2x.png" class="logoImg"/>
+      <image src="../assets/images/operate.png" class="operateImg"/>
+    </view>
+
+    <view class="flex-row input-group">
+      <label><image class="login-icon" src="../assets/images/icon_sj.png"/></label>
+      <input type="number" maxlength="11" placeholder="请输入手机号" bindinput="bindTelPhone"/>
+    </view>
+
+    <view class="flex-row input-group">
+      <label><image class="login-icon" src="../assets/images/icon_yzm.png"/></label>
+      <input type="text" password="true" placeholder="请输入密码" bindinput="bindPassword"/>
+    </view>
+
+    <button class="login-btn" bindtap="login">登录</button>
+  </view>

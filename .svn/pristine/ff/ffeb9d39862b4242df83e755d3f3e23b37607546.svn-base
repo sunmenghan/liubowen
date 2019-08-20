@@ -1,0 +1,14 @@
+.main._5639972 {
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  padding-top: 300rpx;
+}
+.main > text._5639972 {
+  color: #333;
+  font-size: 28rpx;
+  margin-top: 30rpx;
+  margin-bottom: 30rpx;
+}

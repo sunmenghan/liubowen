@@ -1,0 +1,15 @@
+
+    <view class="title">
+      <view class="hint">请在2小时内完成支付</view>
+      <view class="money">应付金额:<text class="price">\t{{price}} \t</text>元</view>
+
+      <view class="box">
+        <image src="{{imgUrl}}" class="codeImg"/>
+      </view>
+      <view class="tip">扫一扫上面的二维码图案，进行付款</view>
+    </view>
+
+    <view class="buttonGroup">
+      <view class="left" bindtap="other">返回首页</view>
+      <view class="right" bindtap="over">完成支付</view>
+    </view>

@@ -1,0 +1,16 @@
+
+  <view class="main">
+    <block  wx:for="{{list}}" wx:key="index" index="index" item="item">
+      <view class="card {{item.overduce === 0 ? 'gray' : ''}}">
+        <view class="time">{{item.beg_at}} - {{item.end_at}}</view>
+        <view class="group">
+          <view class="project" wx:if="{{item.sign}}">签到项目：{{item.project_name}}</view>
+          <view class="project" wx:if="{{item.sub}}">交订金项目：{{item.project_name}}</view>
+        </view>
+      </view>
+    </block>
+
+    <view class="dersci">
+      注意：同一个人同一时间不能同时负责两个不同的项目，若安排有误，请及时联系王李伟 15629083308
+    </view>
+  </view>

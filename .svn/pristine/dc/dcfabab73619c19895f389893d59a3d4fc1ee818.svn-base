@@ -1,0 +1,32 @@
+{
+  "pages": [
+    "pages/index",
+    "pages/pay",
+    "pages/subscription",
+    "pages/addAddress",
+    "pages/member",
+    "pages/review",
+    "pages/signSearch",
+    "pages/EditSub",
+    "pages/contactList",
+    "pages/modifyAddress",
+    "pages/login",
+    "pages/address",
+    "pages/subList",
+    "pages/lose",
+    "pages/signIn",
+    "pages/signOk",
+    "pages/signInList",
+    "pages/groupBuy",
+    "pages/contactAdd",
+    "pages/audit",
+    "pages/checkRoomAdmin"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#f7f7f7"
+  },
+  "sitemapLocation": "sitemap.json"
+}

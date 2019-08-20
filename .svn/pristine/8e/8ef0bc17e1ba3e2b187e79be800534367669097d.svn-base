@@ -1,0 +1,42 @@
+page {
+  background-color: #f7f7f7;
+  padding-top: 20rpx;
+}
+.main {
+  width: 90%;
+  margin: 0 auto;
+}
+.main > .card {
+  background-color: #fff;
+  margin-bottom: 20rpx;
+  padding-left: 20rpx;
+  border-radius: 10rpx;
+}
+.main > .card > .time {
+  font-size: 14px;
+  color: #666;
+  line-height: 80rpx;
+  border-bottom: 1px solid #eee;
+}
+.main > .card > .group {
+  padding: 20rpx 0;
+}
+.main > .card > .group > .project {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  line-height: 60rpx;
+}
+.main > .gray {
+  background-color: #eee;
+}
+.main > .gray > .group > .project {
+  color: #999;
+}
+.main > .dersci {
+  width: 90%;
+  margin: 0 auto;
+  font-size: 12px;
+  color: #999;
+  line-height: 28rpx;
+}
