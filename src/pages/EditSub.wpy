@@ -198,8 +198,8 @@
     data = {
       list: [],
       user: {},
-      addlist:{}, // 用户地址
-      newaddress:{},//修改后的新地址
+      addlist: {}, // 用户地址
+      newaddress: {}, // 修改后的新地址
       userId: '',
       projectId: '',
       chooseAddressBack: null,
@@ -209,53 +209,51 @@
     onLoad(option) {
       let that = this
       that.userId = option.userId
-      that.projectId = option.projectId;
-      let tokenid = wepy.getStorageSync('tokenid');
+      that.projectId = option.projectId
+      let tokenid = wepy.getStorageSync('tokenid')
 
-      console.log(tokenid,"tokenidtokenidtokenid")
-
+      console.log(tokenid, 'tokenidtokenidtokenid')
     }
 
     onShow() {
-            let that = this;
-            let userId = that.userId;
+      let that = this
+      let userId = that.userId
 
-            let projectId = that.projectId;
+      let projectId = that.projectId
 
-            let pages = getCurrentPages()
-            let currPage = pages[pages.length - 1];
+      let pages = getCurrentPages()
+      let currPage = pages[pages.length - 1]
 
-            console.log('curr', currPage)
+      console.log('curr', currPage)
 
-            that.getSub(userId, projectId).then(res => {
-              res.data.data.userlinklist.forEach(e => {
-                if (e.is_default === 1) {
-                  that.user = e
-                }
-              })
+      that.getSub(userId, projectId).then(res => {
+        res.data.data.userlinklist.forEach(e => {
+          if (e.is_default === 1) {
+            that.user = e
+          }
+        })
 
-              res.data.data.userreceivelist.forEach(e => {
-                if (e.is_default === 1) {
-                  that.addlist = e
-                }
-              })
+        res.data.data.userreceivelist.forEach(e => {
+          if (e.is_default === 1) {
+            that.addlist = e
+          }
+        })
 
+        if (currPage.data.chooseAddressBack) {
+                 // that.newaddress.address_detail = currPage.data.chooseAddressBack.address_detail
+                 // that.newaddress.door_number = currPage.data.chooseAddressBack.door_number
+          that.addlist = currPage.data.chooseAddressBack
+          that.$apply()
+          console.log('终于进来了', currPage.data.chooseAddressBack)
+        }
 
-              if (currPage.data.chooseAddressBack) {
-                 //that.newaddress.address_detail = currPage.data.chooseAddressBack.address_detail
-                 //that.newaddress.door_number = currPage.data.chooseAddressBack.door_number
-                  that.addlist = currPage.data.chooseAddressBack
-                  that.$apply()
-                  console.log("终于进来了",currPage.data.chooseAddressBack )
-              }
-
-              if (currPage.data.chooseLinkBack) {
-                console.log('c',currPage.data.chooseLinkBack)
-                that.user = currPage.data.chooseLinkBack
-              }
-              that.list = res.data.data;
-              that.$apply()
-            })
+        if (currPage.data.chooseLinkBack) {
+          console.log('c', currPage.data.chooseLinkBack)
+          that.user = currPage.data.chooseLinkBack
+        }
+        that.list = res.data.data
+        that.$apply()
+      })
     }
 
     methods = {
@@ -263,12 +261,16 @@
         let that = this
         let id = wepy.getStorageSync('activity_project_id')
 
+        if (this.user.link_name == '') {
+          that.selfToast('请补全信息', 'none')
+          return
+        }
         that.commitSub(userId, receiveId, linkId, that.projectId).then(res => {
           if (res.data.resultCode === 1000) {
-              that.$navigate('./pay', {id: res.data.data, price: that.list.projectinfo.so_price,projectId:that.projectId})
-            } else {
-               that.selfToast('请补全信息', 'none')
-            }
+            that.$navigate('./pay', {id: res.data.data, price: that.list.projectinfo.so_price, projectId: that.projectId})
+          } else {
+            that.selfToast('请补全信息', 'none')
+          }
         })
       },
 

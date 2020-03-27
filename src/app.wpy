@@ -420,6 +420,8 @@ export default class extends wepy.app {
   config = {
     pages: [
       'pages/index',
+      'pages/inviteList',
+      'pages/invite',
       'pages/pay',
       'pages/subscription',
       'pages/addAddress',

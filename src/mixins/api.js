@@ -1,8 +1,8 @@
 import wepy from 'wepy'
 // import toast from './toast'
-// const devUrl = 'http://api-test.duorang.com/operate/'
-// const devUrl = 'http://172.16.203.55:8080/operate/'
-const devUrl = 'https://app.duorang.com/operate/'
+const devUrl = 'http://api-test.duorang.com/operate/'
+// const devUrl = 'http:// 172.16.203.121:8083/'
+// const devUrl = 'https://app.duorang.com/operate/'
 
 export default class Api extends wepy.mixin {
   /* * api接口封装
@@ -208,4 +208,22 @@ export default class Api extends wepy.mixin {
   getBaseinfo(data) {
     return this.request('baseinfo/list.json', data)
   }
+
+  /***
+   *  2019-12-26 新增 进群邀请记录
+   * 
+  */
+
+  //新增或修改微信邀请记录
+  doAddOrUpdateRecord(data) {
+    return this.request('groupInviteWxRecord/doAddOrUpdateRecord', data, false)
+  }
+  
+  //邀请记录列表查询 ：
+
+  recordListList(data) {
+    return this.request('groupInviteWxRecord/recordList', data, false)
+  }
+
+  
 }

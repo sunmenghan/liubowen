@@ -74,8 +74,8 @@
         scroll-y
         style="{{'height:'+(height-45)+'px'}}">
       <block wx:for="{{contactList}}" wx:key="index" index="index" item="item">
-        <view class="card" data-id="{{item.id}}" data-index="{{index}}" @tap="chooseLinkBack">
-          <view class="con">
+        <view class="card" data-id="{{item.id}}" data-index="{{index}}" >
+          <view class="con" @tap="chooseLinkBack" data-index="{{index}}">
             <view class="head">
               <text class="title">{{item.link_name}}</text>
               <text class="title">{{item.link_mobile}}</text>
@@ -125,6 +125,8 @@
         let data = list[index]
         let pages = getCurrentPages()
         let curr = pages[pages.length - 2]
+
+        console.log(index,list,"datadata")
         curr.setData({
           chooseLinkBack: data
         })

@@ -1,0 +1,271 @@
+<style lang="less">
+    page{
+        background: #f7f7f7;
+    }
+    .search{
+        display: flex;
+        align-items: center;
+        padding: 0 20rpx;
+        background: #FFF;
+        justify-content: center;
+        font-size: 28rpx;
+        padding: 30rpx 0;
+
+        >view{
+            display: flex;
+            align-items: center;
+            border: 1px solid #888;
+            margin-right:20rpx;
+            border-radius: 10rpx;
+            padding-left: 15rpx;
+        }
+        input{
+            height: 60rpx;
+            line-height: 60rpx;
+            padding-left: 10rpx;
+            width: 70vw;
+        }
+
+        label{
+            border: 1px solid #888;
+            border-radius: 15rpx;
+            padding: 4rpx 8rpx;
+        }
+    }
+    .contants{
+        background: #ffffff;
+        padding: 10rpx 15rpx;
+        border-bottom: 1px solid #ccc;
+        border-top: 1px solid #ccc;
+        margin-bottom: 30rpx;
+        .flexJect{
+            display: flex;
+            justify-content: space-between;
+            font-size: 28rpx;
+            margin-bottom: 20rpx;
+        }
+
+        .contentBox{
+            display: flex;
+            align-items: center;
+            font-size:28rpx;
+            margin-bottom: 20rpx;
+
+            >view{
+                flex: 1;
+                display: flex;
+                align-items: center;
+            }
+
+            text{
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                width: 210rpx;
+                display: inline-block;
+            }
+        }
+    }
+    .typeBotmText{
+            text-align: center;
+            margin-top: 30rpx;
+            font-size:28rpx;
+        }
+    .inviteAddClass{
+        position: fixed;
+        bottom: 0;
+        width:100%;
+        background: #FF5D22;
+        color: #FFF;
+        line-height: 80rpx;
+        height: 80rpx;
+        text-align: center;
+    }
+</style>
+
+<template>
+    <view style="padding-bottom:150rpx;">
+        <view class="search">
+             <view>
+                 <icon type="search" size="18"></icon>    
+                 <input type="text" placeholder="搜索微信号" confirm-type='搜索' @input="searchKey" bindconfirm='searchBtn'>
+             </view>
+
+            <label @tap='searchBtn'>搜索</label>
+        </view>
+        <view class="contants" wx:for="{{item}}" wx:for-index="index" wx:for-item="item" wx:key="id">
+            <view class="flexJect">
+                <view>{{item.user_name}}</view>
+                <view @tap='revise({{item}})'>修改 > </view>
+            </view> 
+            <view class="contentBox">
+                <view @tap='copy({{item.wx_number}})'>微信号：<text>{{item.wx_number}}</text> </view>
+                <view>手机号：{{item.mobile }}</view>
+            </view>  
+            <view class="contentBox">
+                <view>微信群名：<text>{{item.wx_group_name}}</text> </view>
+                <view>地址：<text>{{item.adress}}</text>   </view>
+            </view> 
+            <view class="contentBox">
+                <view>是否注册：{{item.user_id?'已注册':'未注册'}} </view>
+                <view>登记时间：{{item.get_time}}</view>
+            </view> 
+            <view class="contentBox" wx:if='{{item.remark}}'>
+                <view>备注：{{item.remark}}</view>
+            </view>
+        </view>
+        <view class="typeBotmText">~~ {{stopReach?'上拉加载更多':'暂无数据'}} ~~</view>
+        <view @tap='inviteAdd' class="inviteAddClass">添加</view>
+    </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import toastMixin from '../mixins/toast'
+  import api from '../mixins/api'
+  import util from '../mixins/util'
+
+  export default class inviteList extends wepy.page {
+      config = {
+        navigationBarTitleText: '进群邀请记录',
+        navigationBarBackgroundColor: '#FF5D22',
+        navigationBarTextStyle: 'white'
+     }
+
+    mixins = [toastMixin, api, util]  
+
+    data = {
+      stopReach:true, //上拉开关
+      searchKey:'',//关键词
+      item:[],
+      page:1,
+      pagesize:10
+    }
+    methods = {
+        //邀请进群记录
+       inviteAdd(){
+          this.$navigate('./invite')
+       },
+       //修改信息
+       revise(e){
+            console.log(e)
+            var data = {
+                id:e.id,
+                adress:e.adress,
+                mobile:e.mobile,
+                user_name:e.user_name,
+                wx_group_name:e.wx_group_name,
+                wx_number:e.wx_number,
+                remark:e.remark
+            }
+            data = JSON.stringify(data)
+            data = encodeURIComponent(data)
+            
+            this.$navigate('./invite?data='+data)
+
+       },
+       //复制微信号
+       copy(e){
+           wx.setClipboardData({
+                data: e,
+                success:()=> {
+                    this.selfToast('微信号已复制', 'success', 1500)
+                }
+            })
+       },
+       //关键词
+       searchKey(e){
+           console.log(e)
+           let searchKey = e.detail.value;
+           let cursor = e.detail.cursor;
+
+           this.searchKey = searchKey;
+
+           if(!cursor){
+               this.item = [];
+               this.stopReach = true
+               this.page = 1
+               this.methods.recordLists(this)
+           }
+       },
+       //搜索按钮
+       searchBtn(e){
+           this.methods.recordLists(this)
+       },
+       //数据
+       recordLists(self){
+           var data = {
+                page:self.page,
+                pagesize:self.pagesize
+           }
+
+           if(self.searchKey!=''){
+                data.key = self.searchKey
+                data.page = ''
+                data.pagesize = 9999 
+           }
+
+           self.recordListList(data).then(res=>{
+
+              self.page = self.page+1  
+//空数据 显示 空数据
+                if(res.data.data==''){
+                    self.stopReach = false
+
+                    if(self.searchKey!=''){
+                        self.item = [];
+                    }
+
+                    self.$apply()
+                    return
+                }
+
+//时间 重新过滤获取
+                res.data.data.forEach(res=>{
+                     res.get_time = res.get_time.substring(0,10)
+                 })
+
+//有关键词显示搜索结果
+                if(self.searchKey!=''){
+                    self.stopReach = false
+                    var arr = [];
+                    self.item = arr.concat(res.data.data)
+                    self.$apply()
+                    return
+                }
+  //正常的渲染、上拉加载              
+                var l = self.item;
+
+                    l = l.concat(res.data.data)
+
+                 
+
+               self.item = l;
+
+               self.$apply()
+           })
+       }
+       
+    }
+
+    onShow(option){
+        var self = this;
+        self.page = 1
+        self.item = [];
+
+        self.methods.recordLists(self)
+    }
+
+     onReachBottom() {
+
+        if(this.stopReach){
+            this.methods.recordLists(this)
+        }else{
+            this.selfToast('没有数据了', 'none', 2000)
+        }
+
+
+     }
+
+  }
+</script>

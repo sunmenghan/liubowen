@@ -192,40 +192,36 @@
 
       this.user_id = option.user_id
       this.$apply()
-
-
     }
 
     onShow() {
-      var that = this;
+      var that = this
       let data = {
         user_id: this.user_id,
         page: 1,
         pagesize: 20
       }
-       this.getAddress(data).then(res => {
+      this.getAddress(data).then(res => {
         this.addressList = res.data.data
-//如果只有一个地址，那就显示为默认地址;
-        if(res.data.data.length==1){
+// 如果只有一个地址，那就显示为默认地址;
+        if (res.data.data.length == 1) {
           var id = {
-            id:res.data.data[0].id,
-            user_id:res.data.data[0].user_id
+            id: res.data.data[0].id,
+            user_id: res.data.data[0].user_id
           }
           this.address_update(id).then(res => {
-              let addressList = that.addressList
-              for (let o of addressList) {
-                o.is_default = 0
-                if (o.id == id.id) {
-                  o.is_default = 1
-                }
+            let addressList = that.addressList
+            for (let o of addressList) {
+              o.is_default = 0
+              if (o.id == id.id) {
+                o.is_default = 1
               }
-              that.addressList = addressList
-              that.$apply()
-              console.log('addressList', that)
-            })
-
+            }
+            that.addressList = addressList
+            that.$apply()
+            console.log('addressList', that)
+          })
         }
-
 
         this.setData({
           addressList: res.data.data,
@@ -233,9 +229,7 @@
         })
         this.$apply()
       })
-
-
-  }
+    }
 
     methods = {
 
@@ -317,7 +311,7 @@
         para = {
           id: id,
          // address_detail: village_name,
-         village_name:village_name,
+          village_name: village_name,
           can_update: can_update,
           address_type: address_type,
           village_name: village_name,

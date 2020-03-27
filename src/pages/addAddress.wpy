@@ -191,7 +191,6 @@
 
     methods = {
 
-
     }
 
     addressInput(e) {
@@ -223,23 +222,22 @@
         this.showToasts(validateResult.msg)
         return false
       }
-console.log(para,"paraparapara");
 
-      if(para.province_name=="" || para.village_name=="" || para.door_number==""){
-         wx.showToast({
-            title: '请补全信息',
-            icon: 'none',
-            duration: 1500
-          })
+      if (para.province_name == '' || para.village_name == '' || para.door_number == '') {
+        wx.showToast({
+          title: '请补全信息',
+          icon: 'none',
+          duration: 1500
+        })
         return false
       }
 
       this.adress_add(para).then(res => {
         this.showToasts('保存成功', 'success')
         setTimeout(() => {
-            wx.navigateBack({
-               delta:1
-             })
+          wx.navigateBack({
+            delta: 1
+          })
         }, 500)
       })
     }

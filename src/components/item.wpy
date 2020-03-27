@@ -167,6 +167,7 @@
   import toastMixin from '../mixins/toast'
   import api from '../mixins/api'
   import util from '../mixins/util'
+  
   export default class item extends wepy.component {
     props = {
       listData: {

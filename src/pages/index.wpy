@@ -70,7 +70,7 @@
       position: relative;
       >image {
         width:64rpx;
-        height:72rpx;
+        height:68rpx;
       }
       >text {
         display: block;
@@ -176,7 +176,12 @@
         <text>参团提醒</text>
       </view>
 
-      <view class="menu">
+      <view class="menu" @tap="invite">
+        <image src="../assets/images/icon-group.png" />
+        <text>进群邀请记录</text>
+      </view>
+
+      <!-- <view class="menu">
         <image src="../assets/images/icon_sjtj@2x.png" />
         <text>数据统计</text>
         <view class="expect">敬请期待</view>
@@ -186,7 +191,8 @@
         <image src="../assets/images/icon_ddgl@2x.png" />
         <text>认证审核</text>
         <view class="expect">敬请期待</view>
-      </view>
+      </view> -->
+
     </view>
 
     <view class="group-buying" @tap="groupBuy">
@@ -281,6 +287,10 @@
           this.selfToast('暂无集采项目！', 'none')
         }
       },
+      //邀请进群记录
+       invite(){
+          this.$navigate('./inviteList')
+       },
 
       // 查询集采
       querySign () {

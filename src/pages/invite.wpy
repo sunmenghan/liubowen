@@ -1,0 +1,134 @@
+<style lang="less">
+    .contant{
+        margin: 40rpx 40rpx 0 40rpx;
+
+        button{
+            padding: 0;
+            font-size: 32rpx;
+            margin-top: 60rpx;
+            background: #FF5D22;
+            color: #ffffff;
+        }
+    }
+    .formView{
+        display: flex;
+        align-items: center;
+        margin-bottom: 30rpx;
+
+        input{
+            border: 1px solid #999;
+            margin-left: 10rpx;
+            height: 60rpx;
+            line-height: 60rpx;
+            font-size: 28rpx;
+            padding-left: 14rpx;
+            flex: 1;
+        }
+
+        label{
+            width: 180rpx;
+            font-size: 28rpx;
+        }
+
+        
+    }
+</style>
+
+<template>
+   <view class="contant">
+    <form bindsubmit="formSubmit">
+        <view class="formView">
+            <label for="">用户名/昵称</label>
+            <input type="text" name="userName" value="{{datas && datas.user_name}}">
+        </view>
+        <view class="formView">
+            <label for="">微信号</label>
+            <input type="text" name="wxNumber" value="{{datas && datas.wx_number}}">
+        </view>
+        <view class="formView">
+            <label for="">手机号</label>
+            <input type="number" name="tell" value="{{datas && datas.mobile}}">
+        </view>
+        <view class="formView">
+            <label for="">微信群名</label>
+            <input type="text" name="wxGroupNumber" value="{{datas && datas.wx_group_name}}">
+        </view>
+        <view class="formView">
+            <label for="">地址</label>
+            <input type="text" name="base" value="{{datas && datas.adress}}">
+        </view>
+        <view class="formView">
+            <label for="">备注</label>
+            <input type="text" name="remark" value="{{datas && datas.remark}}">
+        </view>
+
+        <button form-type="submit">{{revise?'确认修改':'确认新增'}}</button>
+    </form>
+   </view>
+</template>
+
+
+<script>
+  import wepy from 'wepy'
+  import toastMixin from '../mixins/toast'
+  import api from '../mixins/api'
+  import util from '../mixins/util'
+
+  export default class invite extends wepy.page {
+      config = {
+        navigationBarTitleText: '添加',
+        navigationBarBackgroundColor: '#FF5D22',
+        navigationBarTextStyle: 'white'
+     }
+
+    mixins = [toastMixin, api, util]
+
+    data = {
+      datas:{},
+      revise:false,//是否要修改
+    }
+
+     methods = {
+        formSubmit(e){
+            console.log(e,"as")
+
+            var item = e.detail.value;
+            var data = {
+                adress:item.base,
+                mobile:item.tell,
+                user_name: item.userName,
+                wx_group_name:item.wxGroupNumber,
+                wx_number:  item.wxNumber,
+                remark:item.remark
+            }
+            if(this.revise){
+                data.id = this.datas.id
+            }
+            console.log(data)
+
+            this.doAddOrUpdateRecord(data).then(res=>{
+
+                if(res.data.resultCode ===1000){
+                    this.selfToast('新增成功', 'success', 2000)
+                    setTimeout(()=>{
+                        wepy.navigateBack({
+                            delta: 1 //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+                        }); 
+                    },1000)
+                }
+
+            })
+        }
+     }
+
+     onLoad(option){
+        if(option.data){
+            var datas = decodeURIComponent(option.data)
+                datas = JSON.parse(datas)
+                this.datas = datas
+                this.revise = true
+        }
+     }
+
+  }
+</script>
